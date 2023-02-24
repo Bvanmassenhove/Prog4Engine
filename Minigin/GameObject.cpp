@@ -2,23 +2,34 @@
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
+#include "TextComponent.h"
 
-dae::GameObject::~GameObject() = default;
-
-void dae::GameObject::Update(){}
-
-void dae::GameObject::Render() const
+dae::GameObject::~GameObject()
 {
-	const auto& pos = m_transform.GetPosition();
-	Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
-}
+	for (auto Component : m_Components)
+	{
+		delete Component;
+	}
+	m_Components.clear();
+};
 
-void dae::GameObject::SetTexture(const std::string& filename)
+void dae::GameObject::Update()
 {
-	m_texture = ResourceManager::GetInstance().LoadTexture(filename);
+	for (baseComponent* component : m_Components)
+	{
+		if (dynamic_cast<TextComponent*>(component))
+		{
+			dynamic_cast<TextComponent*>(component)->Update();
+		}
+	}
 }
 
 void dae::GameObject::SetPosition(float x, float y)
 {
-	m_transform.SetPosition(x, y, 0.0f);
+	m_Transform.SetPosition(x, y, 0.0f);
+}
+
+void dae::GameObject::AddComponent(baseComponent* component)
+{
+	m_Components.push_back(component);
 }

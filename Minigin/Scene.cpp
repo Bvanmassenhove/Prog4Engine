@@ -1,5 +1,8 @@
 #include "Scene.h"
 #include "GameObject.h"
+#include "TextureComponent.h"
+#include "TextComponent.h"
+#include "FPSComponent.h"
 
 using namespace dae;
 
@@ -24,11 +27,14 @@ void Scene::RemoveAll()
 	m_objects.clear();
 }
 
-void Scene::Update()
+void Scene::Update(float deltaTime)
 {
 	for(auto& object : m_objects)
 	{
-		object->Update();
+		auto fpscomp = object->GetComponent<FPSComponent>();
+		auto textcomp = object->GetComponent<TextComponent>();
+		if (fpscomp != nullptr)fpscomp->update(deltaTime), textcomp->SetText(std::to_string(fpscomp->GetFPS()));
+		if (textcomp != nullptr) textcomp->Update();
 	}
 }
 
@@ -36,7 +42,10 @@ void Scene::Render() const
 {
 	for (const auto& object : m_objects)
 	{
-		object->Render();
+		auto Rendercomp = object->GetComponent<TextureComponent>();
+		auto textcomp = object->GetComponent<TextComponent>();
+		if (Rendercomp != nullptr) Rendercomp->Render();
+		if (textcomp != nullptr) textcomp->Render();
 	}
 }
 
