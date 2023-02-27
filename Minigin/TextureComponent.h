@@ -1,28 +1,29 @@
 #pragma once
 #include <string>
 #include <memory>
-#include "baseComponent.h"
+#include "BaseComponent.h"
 #include "Transform.h"
 
 namespace dae
 {
 	class Texture2D;
-	class TextureComponent final : public baseComponent
+	class TextureComponent final : public BaseComponent
 	{
 	public:
-		TextureComponent() = default;
-		TextureComponent(const std::string& filename);
-		~TextureComponent() = default;
-		virtual void Render();
-		virtual void SetTexture(const std::string& filename);
-		virtual void SetTransform(float x, float y, float z);
-
+		TextureComponent(std::string& filename, GameObject* object);
+		virtual ~TextureComponent() = default;
 		TextureComponent(const TextureComponent& other) = delete;
 		TextureComponent(TextureComponent&& other) = delete;
 		TextureComponent& operator=(const TextureComponent& other) = delete;
 		TextureComponent& operator=(TextureComponent&& other) = delete;
+
+		void Update(float) override;
+		void Render() const override;
+
+		void SetTexture(const std::string& filename);
+		void SetTransform(float x, float y, float z);
 	private:
-		std::shared_ptr<Texture2D> m_Texture{};
-		Transform m_Transform{};
+		std::shared_ptr<dae::Texture2D> m_Texture{};
+		dae::Transform m_Transform{};
 	};
 }

@@ -2,7 +2,8 @@
 #include <memory>
 #include <vector>
 #include "Transform.h"
-#include "baseComponent.h"
+#include "BaseComponent.h"
+#include <string>
 
 namespace dae
 {
@@ -12,15 +13,13 @@ namespace dae
 	class GameObject final
 	{
 	public:
-		virtual void Update();
-
-		void SetTexture(const std::string& filename);
+		void Update(float deltatime);
+		void Render();
 		void SetPosition(float x, float y);
-
-		void AddComponent(baseComponent* component);
+		void AddComponent(BaseComponent* component);
 		template <typename T> T* GetComponent() const
 		{
-			for (baseComponent* component : m_Components)
+			for (BaseComponent* component : m_Components)
 			{
 				if (dynamic_cast<T*>(component))
 					return (T*)component;
@@ -30,7 +29,7 @@ namespace dae
 		template <typename T> bool RemoveComponent(T* ToRemoveComponent)
 		{
 
-			for (baseComponent* component : m_Components)
+			for (BaseComponent* component : m_Components)
 			{
 				if (dynamic_cast<T*>(component))
 				{
@@ -49,7 +48,7 @@ namespace dae
 		GameObject& operator=(GameObject&& other) = delete;
 
 	private:
-		std::vector<baseComponent*> m_Components;
-		Transform m_Transform;
+		std::vector<BaseComponent*> m_Components;
+		dae::Transform m_Transform;
 	};
 }

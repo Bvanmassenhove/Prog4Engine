@@ -1,14 +1,24 @@
 #pragma once
 
-class baseComponent
+namespace dae
 {
-public:
-	baseComponent() = default;
-	virtual ~baseComponent() = default;
+	class GameObject;
+	class BaseComponent
+	{
+		GameObject* m_pOwner;
+	public:
+		virtual ~BaseComponent() = default;
 
-	baseComponent(const baseComponent& other) = delete;
-	baseComponent(baseComponent&& other) = delete;
-	baseComponent& operator=(const baseComponent& other) = delete;
-	baseComponent& operator=(baseComponent&& other) = delete;
-	
-};
+		BaseComponent(const BaseComponent& other) = delete;
+		BaseComponent(BaseComponent&& other) = delete;
+		BaseComponent& operator=(const BaseComponent& other) = delete;
+		BaseComponent& operator=(BaseComponent&& other) = delete;
+
+		virtual void Update(float deltatime) = 0;
+		virtual void Render() const = 0;
+
+	protected:
+		explicit BaseComponent(GameObject* parent) : m_pOwner(parent) {}
+		const GameObject* GetOwner() { return m_pOwner; }
+	};
+}

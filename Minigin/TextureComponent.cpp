@@ -1,21 +1,27 @@
 #include "TextureComponent.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
+#include "GameObject.h"
 
-dae::TextureComponent::TextureComponent(const std::string& filename)
+using namespace dae;
+
+TextureComponent::TextureComponent(std::string& filename, GameObject* object)
+	:BaseComponent(object)
 {
-	m_Texture = ResourceManager::GetInstance().LoadTexture(filename);
+	m_Texture = dae::ResourceManager::GetInstance().LoadTexture(filename);
 }
-void dae::TextureComponent::Render()
+void TextureComponent::Update(float) {};
+
+void TextureComponent::Render() const
 {
 	const auto pos = m_Transform.GetPosition();
-	Renderer::GetInstance().RenderTexture(*m_Texture, pos.x, pos.y);
+	dae::Renderer::GetInstance().RenderTexture(*m_Texture, pos.x, pos.y);
 }
-void dae::TextureComponent::SetTexture(const std::string& filename)
+void TextureComponent::SetTexture(const std::string& filename)
 {
-	m_Texture = ResourceManager::GetInstance().LoadTexture(filename);
+	m_Texture = dae::ResourceManager::GetInstance().LoadTexture(filename);
 }
-void dae::TextureComponent::SetTransform(float x, float y, float z)
+void TextureComponent::SetTransform(float x, float y, float z)
 {
 	m_Transform.SetPosition(x, y, z);
 }

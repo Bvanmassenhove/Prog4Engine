@@ -29,12 +29,10 @@ void Scene::RemoveAll()
 
 void Scene::Update(float deltaTime)
 {
+	//todo mark for delete implement 
 	for(auto& object : m_objects)
 	{
-		auto fpscomp = object->GetComponent<FPSComponent>();
-		auto textcomp = object->GetComponent<TextComponent>();
-		if (fpscomp != nullptr)fpscomp->update(deltaTime), textcomp->SetText(std::to_string(fpscomp->GetFPS()));
-		if (textcomp != nullptr) textcomp->Update();
+		object->Update(deltaTime);
 	}
 }
 
@@ -42,10 +40,7 @@ void Scene::Render() const
 {
 	for (const auto& object : m_objects)
 	{
-		auto Rendercomp = object->GetComponent<TextureComponent>();
-		auto textcomp = object->GetComponent<TextComponent>();
-		if (Rendercomp != nullptr) Rendercomp->Render();
-		if (textcomp != nullptr) textcomp->Render();
+		object->Render();
 	}
 }
 

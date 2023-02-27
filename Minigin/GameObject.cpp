@@ -3,8 +3,12 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 #include "TextComponent.h"
+#include "FPSComponent.h"
+#include "TextureComponent.h"
 
-dae::GameObject::~GameObject()
+using namespace dae;
+
+GameObject::~GameObject()
 {
 	for (auto Component : m_Components)
 	{
@@ -13,23 +17,27 @@ dae::GameObject::~GameObject()
 	m_Components.clear();
 };
 
-void dae::GameObject::Update()
+void GameObject::Update(float deltatime)
 {
-	for (baseComponent* component : m_Components)
+	for (BaseComponent* component : m_Components)
 	{
-		if (dynamic_cast<TextComponent*>(component))
-		{
-			dynamic_cast<TextComponent*>(component)->Update();
-		}
+		component->Update(deltatime);
+	}
+}
+void GameObject::Render()
+{
+	for (BaseComponent* component : m_Components)
+	{
+		component->Render();
 	}
 }
 
-void dae::GameObject::SetPosition(float x, float y)
+void GameObject::SetPosition(float x, float y)
 {
 	m_Transform.SetPosition(x, y, 0.0f);
 }
 
-void dae::GameObject::AddComponent(baseComponent* component)
+void GameObject::AddComponent(BaseComponent* component)
 {
 	m_Components.push_back(component);
 }

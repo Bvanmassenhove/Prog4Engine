@@ -91,21 +91,23 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	while (doContinue)
 	{
 		const auto currentTime = high_resolution_clock::now();
-		float deltaTime = duration<float>(currentTime - lastTime).count();
+		const float deltaTime = duration<float>(currentTime - lastTime).count();
 		lastTime = currentTime;
 		m_Lag += deltaTime;
 		doContinue = input.ProcessInput();
-		while (m_Lag >= m_FixedTimeStep)
-		{
-			//FixedUpdate(fixedTimeStep);
-			m_Lag -= m_FixedTimeStep;
-		}
+
+		//fixed update only for physics or networking
+		//while (m_Lag >= m_FixedTimeStep)
+		//{
+		//	//sceneManager.FixedUpdate(m_FixedTimeStep);
+		//	m_Lag -= m_FixedTimeStep;
+		//}
 
 		sceneManager.Update(deltaTime);
 		renderer.Render();
 
 		lastTime = currentTime;
-		auto sleepTime = duration_cast<duration<float>>(currentTime + milliseconds(MsPerFrame) - high_resolution_clock::now());
+		auto sleepTime = duration_cast<duration<float>>(currentTime + milliseconds(m_MsPerFrame) - high_resolution_clock::now());
 		std::this_thread::sleep_for(sleepTime);
 	}
 }

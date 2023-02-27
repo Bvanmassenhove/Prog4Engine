@@ -1,7 +1,14 @@
 #include "FPSComponent.h"
+#include "TextComponent.h"
 #include <chrono>
+#include <string>
 
-void FPSComponent::update(float deltatime)
+using namespace dae;
+
+FPSComponent::FPSComponent(GameObject* object)
+	:BaseComponent(object)
+{}
+void FPSComponent::Update(float deltatime)
 {
 	m_FrameCount++;
 	m_ElapsedTime += deltatime;
@@ -11,4 +18,7 @@ void FPSComponent::update(float deltatime)
 		m_FrameCount = 0;
 		m_ElapsedTime = 0.f;
 	}
+	const GameObject* owner = BaseComponent::GetOwner();
+	owner->GetComponent<TextComponent>()->SetText(std::to_string(m_FPS));
 }
+void FPSComponent::Render() const {};
