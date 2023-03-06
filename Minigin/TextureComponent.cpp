@@ -9,8 +9,14 @@ TextureComponent::TextureComponent(std::string& filename, GameObject* object)
 	:BaseComponent(object)
 {
 	m_Texture = dae::ResourceManager::GetInstance().LoadTexture(filename);
+	m_Transform.SetPosition(object->GetWorldPos().x, object->GetWorldPos().y, object->GetWorldPos().z);
+	
 }
-void TextureComponent::Update(float) {};
+void TextureComponent::Update(float) 
+{
+	const auto owner = BaseComponent::GetOwner();
+	m_Transform.SetPosition(owner->GetWorldPos().x, owner->GetWorldPos().y, owner->GetWorldPos().z);
+}
 
 void TextureComponent::Render() const
 {

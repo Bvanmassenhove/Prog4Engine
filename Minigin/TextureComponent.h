@@ -3,6 +3,7 @@
 #include <memory>
 #include "BaseComponent.h"
 #include "Transform.h"
+#include "GameObject.h"
 
 namespace dae
 {

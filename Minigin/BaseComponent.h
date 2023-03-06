@@ -16,9 +16,8 @@ namespace dae
 
 		virtual void Update(float deltatime) = 0;
 		virtual void Render() const = 0;
-
 	protected:
 		explicit BaseComponent(GameObject* parent) : m_pOwner(parent) {}
-		const GameObject* GetOwner() { return m_pOwner; }
+		GameObject* GetOwner() { return m_pOwner; }
 	};
 }

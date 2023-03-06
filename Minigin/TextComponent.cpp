@@ -5,15 +5,17 @@
 #include "Renderer.h"
 #include "Font.h"
 #include "Texture2D.h"
+#include "GameObject.h"
 
 using namespace dae;
 
 TextComponent::TextComponent(const std::string& text, const std::shared_ptr<Font>& font, GameObject* object)
 	: m_NeedsUpdate(true), m_Text(text), m_Font(font), m_Texture(nullptr) , BaseComponent(object)
-{ }
+{
+	m_Transform.SetPosition(object->GetWorldPos().x, object->GetWorldPos().y, object->GetWorldPos().z);
+}
 
-
-void TextComponent::Update(float deltatime)
+void TextComponent::Update(float)
 {
 	if (m_NeedsUpdate)
 	{
@@ -32,7 +34,6 @@ void TextComponent::Update(float deltatime)
 		m_Texture = std::make_shared<dae::Texture2D>(texture);
 		m_NeedsUpdate = false;
 	}
-	deltatime = deltatime++;
 }
 
 void TextComponent::Render() const

@@ -61,6 +61,9 @@
     <ClInclude Include="FPSComponent.h">
       <Filter>Engine\GameComponents</Filter>
     </ClInclude>
+    <ClInclude Include="RotationComponent.h">
+      <Filter>Engine\GameComponents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Font.cpp">
@@ -103,6 +106,9 @@
       <Filter>Engine\GameComponents</Filter>
     </ClCompile>
     <ClCompile Include="FPSComponent.cpp">
+      <Filter>Engine\GameComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="RotationComponent.cpp">
       <Filter>Engine\GameComponents</Filter>
     </ClCompile>
   </ItemGroup>

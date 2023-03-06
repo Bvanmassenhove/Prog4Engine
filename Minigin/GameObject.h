@@ -8,14 +8,18 @@
 namespace dae
 {
 	class Texture2D;
-
-	// todo: this should become final.
 	class GameObject final
 	{
 	public:
+		GameObject() = default;
+		~GameObject();
+		GameObject(const GameObject& other) = delete;
+		GameObject(GameObject&& other) = delete;
+		GameObject& operator=(const GameObject& other) = delete;
+		GameObject& operator=(GameObject&& other) = delete;
+
 		void Update(float deltatime);
 		void Render();
-		void SetPosition(float x, float y);
 		void AddComponent(BaseComponent* component);
 		template <typename T> T* GetComponent() const
 		{
@@ -40,15 +44,23 @@ namespace dae
 			return false;
 		}
 
-		GameObject() = default;
-		~GameObject();
-		GameObject(const GameObject& other) = delete;
-		GameObject(GameObject&& other) = delete;
-		GameObject& operator=(const GameObject& other) = delete;
-		GameObject& operator=(GameObject&& other) = delete;
+		void SetParent(GameObject* pParent, bool keepWorldPos);
+		void SetLocalPos(const glm::vec3& pos);
+		const glm::vec3& GetLocalPos() { return m_LocalTransform; };
+		const glm::vec3& GetWorldPos();
+		void UpdateWorldPos();
+
+		
 
 	private:
+		GameObject* m_pParent{ nullptr };
+		std::vector <GameObject*> m_pchilderen;
 		std::vector<BaseComponent*> m_Components;
-		dae::Transform m_Transform;
+		glm::vec3 m_WorldTransform;
+		glm::vec3 m_LocalTransform;
+		bool m_positionIsDirty{ true };
+
+		void RemoveChild(GameObject* pChild) { m_pchilderen.erase(std::remove(m_pchilderen.begin(), m_pchilderen.end(), pChild), m_pchilderen.end()); }
+		void AddChild(GameObject* pChild) { m_pchilderen.push_back(pChild); }
 	};
 }
