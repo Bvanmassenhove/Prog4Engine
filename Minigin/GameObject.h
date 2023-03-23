@@ -49,8 +49,16 @@ namespace dae
 		const glm::vec3& GetLocalPos() { return m_LocalTransform; };
 		const glm::vec3& GetWorldPos();
 		void UpdateWorldPos();
+		void SetPositionDirty()
+		{
+			m_positionIsDirty = true;
+			for (auto child : m_pchilderen)
+			{
+				child->SetPositionDirty();
+			}
+		};
 
-		
+
 
 	private:
 		GameObject* m_pParent{ nullptr };

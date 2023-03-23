@@ -15,6 +15,12 @@ GameObject::~GameObject()
 		delete Component;
 	}
 	m_Components.clear();
+	for (auto child : m_pchilderen)
+	{
+		delete child;
+		child = nullptr;
+	}
+	m_pchilderen.clear();
 };
 
 void GameObject::Update(float deltatime)
@@ -23,12 +29,27 @@ void GameObject::Update(float deltatime)
 	{
 		component->Update(deltatime);
 	}
+	if (m_pchilderen.size() != 0)
+	{
+		for (auto child : m_pchilderen)
+		{
+			child;
+			child->Update(deltatime);
+		}
+	}
 }
 void GameObject::Render()
 {
 	for (BaseComponent* component : m_Components)
 	{
 		component->Render();
+	}
+	if (m_pchilderen.size() != 0)
+	{
+		for (auto child : m_pchilderen)
+		{
+			child->Render();
+		}
 	}
 }
 
@@ -49,7 +70,7 @@ void GameObject::SetParent(GameObject* pParent, bool keepWorldPos)
 		{
 			SetLocalPos(m_LocalTransform - pParent->GetWorldPos());
 		}
-		m_positionIsDirty = true;
+		SetPositionDirty();
 	}
 	if (m_pParent)
 	{
@@ -64,9 +85,9 @@ void GameObject::SetParent(GameObject* pParent, bool keepWorldPos)
 void GameObject::SetLocalPos(const glm::vec3& pos)
 {
 	m_LocalTransform = pos;
-	m_positionIsDirty = true;
+	SetPositionDirty();
 }
-const glm::vec3& GameObject::GetWorldPos() 
+const glm::vec3& GameObject::GetWorldPos()
 {
 	if (m_positionIsDirty)
 	{

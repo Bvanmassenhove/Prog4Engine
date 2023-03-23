@@ -5,13 +5,15 @@
 
 using namespace dae;
 
-RotationComponent::RotationComponent(glm::vec3 rotCenter, float rotSpeed, bool cloackwise, float rotDistance, GameObject* object)
-	:m_RotCenter(rotCenter),m_RotSpeed(rotSpeed), m_RotClockwise(cloackwise),m_RotDistance(rotDistance), BaseComponent(object)
+RotationComponent::RotationComponent(float angle, float rotDistance, bool cloackwise, GameObject* object)
+	:m_Angle(angle), m_RotDistance(rotDistance), m_RotClockwise(cloackwise), BaseComponent(object)
 { }
 
 
 void RotationComponent::Update(float)
 {
+
+	//float x = m_RotDistance * cos(m_RotSpeed)
 	/*float s = sin(angle);
 	float c = cos(angle);
 

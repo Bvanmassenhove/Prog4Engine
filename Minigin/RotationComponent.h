@@ -8,7 +8,7 @@ namespace dae
 	class RotationComponent final : public BaseComponent
 	{
 	public:
-		explicit RotationComponent(glm::vec3 rotCenter,float rotSpeed,bool cloackwise,float rotDistance, GameObject* object);
+		explicit RotationComponent(float angle, float rotDistance, bool cloackwise, GameObject* object);
 		virtual ~RotationComponent() = default;
 		RotationComponent(const RotationComponent& other) = delete;
 		RotationComponent(RotationComponent&& other) = delete;
@@ -17,13 +17,11 @@ namespace dae
 
 		void Update(float) override;
 		void Render() const override;
-		void SetRotCenter(glm::vec3 rotCenter) { m_RotCenter = rotCenter; }
 
 	private:
-		glm::vec3 m_RotCenter;
-		float m_RotSpeed;
-		bool m_RotClockwise;
+		float m_Angle;
 		float m_RotDistance;
+		bool m_RotClockwise;
 
 	};
 }
