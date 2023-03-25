@@ -94,6 +94,11 @@
     <ClInclude Include="..\3rdParty\imgui\imgui_plot.h">
       <Filter>Engine\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="ButtonCommands.h" />
+    <ClInclude Include="Controller.h" />
+    <ClInclude Include="MovementComponent.h">
+      <Filter>Engine\GameComponents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Font.cpp">
@@ -164,6 +169,10 @@
     </ClCompile>
     <ClCompile Include="..\3rdParty\imgui\imgui_plot.cpp">
       <Filter>Engine\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="MovementComponent.cpp">
+      <Filter>Engine\GameComponents</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

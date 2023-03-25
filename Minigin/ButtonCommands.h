@@ -1,20 +1,43 @@
 #pragma once
-#include <iostream>
+#include "MovementComponent.h"
 
-class Command
+namespace dae
 {
-protected:
+	class Command
+	{
+	protected:
+		MovementComponent* GetMovementComponent() const { return movementComponent; }
+	public:
+		explicit Command(MovementComponent* moveComponent): movementComponent(moveComponent){};
+		virtual ~Command() = default;
+		virtual void Execute() = 0;
+	private:
+		MovementComponent* movementComponent;
+	};
 
-public:
-	explicit Command() {};
-	virtual ~Command() = default;
-	virtual void Excecute() = 0;
-private:
+	class MoveUp : public Command
+	{
+	public:
+		MoveUp(MovementComponent* moveComponent): Command(moveComponent) {};
+		void Execute() override { GetMovementComponent()->MoveUp(); };
+	};
+	class MoveLeft : public Command
+	{
+	public:
+		MoveLeft(MovementComponent* moveComponent) : Command(moveComponent) {};
+		void Execute() override { GetMovementComponent()->MoveLeft(); };
+	};
+	class MoveRight : public Command
+	{
+	public:
+		MoveRight(MovementComponent* moveComponent) : Command(moveComponent) {};
+		void Execute() override { GetMovementComponent()->MoveRight(); };
+	};
+	class MoveDown : public Command
+	{
+	public:
+		MoveDown(MovementComponent* moveComponent) : Command(moveComponent) {};
+		void Execute() override { GetMovementComponent()->MoveDown(); };
+	};
 
-};
-
-class Jump : public Command
-{
-public:
-	void Excecute() override { std::cout << "jump\n"; };
-};
+}

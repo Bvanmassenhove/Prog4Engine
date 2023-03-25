@@ -37,102 +37,102 @@ void dae::Renderer::Init(SDL_Window* window)
 	ImGui_ImplOpenGL2_Init();
 }
 
-void Exercise1(float* data)
-{
-	std::vector<int> arr{};
-	arr.resize(1000000);
-
-	int step = 0;
-	for (size_t stepsize = 1; stepsize <= 1024; stepsize *= 2)
-	{
-		auto start = std::chrono::high_resolution_clock::now();
-		for (size_t amount = 0; amount < 3; amount++)
-		{
-
-			for (size_t i = 0; i < arr.size(); i += stepsize)
-			{
-				arr[i] *= 2;
-			}
-		}
-		auto end = std::chrono::high_resolution_clock::now();
-		auto elapsedTime = duration_cast<std::chrono::microseconds>(end - start).count();
-		data[step] = (float)elapsedTime;
-		++step;
-	}
-	
-}
-struct Transform
-{
-	float matrix[16] = {
-		1,0,0,0,
-		0,1,0,0,
-		0,0,1,0,
-		0,0,0,1 };
-};
-class GameObject3DAlt
-{
-public:
-	Transform* transformAlt;
-	int ID;
-};
-class GameObject3D
-{
-public:
-	Transform transform;
-	int ID;
-};
-void Exercise2(float* data)
-{
-	std::vector<GameObject3D> arrGameObj{};
-	arrGameObj.resize(1000000);
-	
-	int step = 0;
-	for (size_t stepsize = 1; stepsize <= 1024; stepsize *= 2)
-	{
-		auto start = std::chrono::high_resolution_clock::now();
-		for (size_t amount = 0; amount < 3; amount++)
-		{
-
-			for (size_t i = 0; i < arrGameObj.size(); i += stepsize)
-			{
-				arrGameObj[i].ID *= 2;
-			}
-		}
-		auto end = std::chrono::high_resolution_clock::now();
-		auto elapsedTime = duration_cast<std::chrono::microseconds>(end - start).count();
-		data[step] = (float)elapsedTime;
-		++step;
-	}
-
-}
-void Exercise3(float* data)
-{
-	std::vector<GameObject3D> arrGameObjAlt{};
-	arrGameObjAlt.resize(1000000);
-
-	int step = 0;
-	for (size_t stepsize = 1; stepsize <= 1024; stepsize *= 2)
-	{
-		auto start = std::chrono::high_resolution_clock::now();
-		for (size_t amount = 0; amount < 3; amount++)
-		{
-
-			for (size_t i = 0; i < arrGameObjAlt.size(); i += stepsize)
-			{
-				arrGameObjAlt[i].ID *= 2;
-			}
-		}
-		auto end = std::chrono::high_resolution_clock::now();
-		auto elapsedTime = duration_cast<std::chrono::microseconds>(end - start).count();
-		data[step] = (float)elapsedTime;
-		++step;
-	}
-
-}
-constexpr size_t data_count = 10;
-float y_data1[data_count];
-float y_data2[data_count];
-float y_data3[data_count];
+//void Exercise1(float* data)
+//{
+//	std::vector<int> arr{};
+//	arr.resize(1000000);
+//
+//	int step = 0;
+//	for (size_t stepsize = 1; stepsize <= 1024; stepsize *= 2)
+//	{
+//		auto start = std::chrono::high_resolution_clock::now();
+//		for (size_t amount = 0; amount < 3; amount++)
+//		{
+//
+//			for (size_t i = 0; i < arr.size(); i += stepsize)
+//			{
+//				arr[i] *= 2;
+//			}
+//		}
+//		auto end = std::chrono::high_resolution_clock::now();
+//		auto elapsedTime = duration_cast<std::chrono::microseconds>(end - start).count();
+//		data[step] = (float)elapsedTime;
+//		++step;
+//	}
+//	
+//}
+//struct Transform
+//{
+//	float matrix[16] = {
+//		1,0,0,0,
+//		0,1,0,0,
+//		0,0,1,0,
+//		0,0,0,1 };
+//};
+//class GameObject3DAlt
+//{
+//public:
+//	Transform* transformAlt;
+//	int ID;
+//};
+//class GameObject3D
+//{
+//public:
+//	Transform transform;
+//	int ID;
+//};
+//void Exercise2(float* data)
+//{
+//	std::vector<GameObject3D> arrGameObj{};
+//	arrGameObj.resize(1000000);
+//	
+//	int step = 0;
+//	for (size_t stepsize = 1; stepsize <= 1024; stepsize *= 2)
+//	{
+//		auto start = std::chrono::high_resolution_clock::now();
+//		for (size_t amount = 0; amount < 3; amount++)
+//		{
+//
+//			for (size_t i = 0; i < arrGameObj.size(); i += stepsize)
+//			{
+//				arrGameObj[i].ID *= 2;
+//			}
+//		}
+//		auto end = std::chrono::high_resolution_clock::now();
+//		auto elapsedTime = duration_cast<std::chrono::microseconds>(end - start).count();
+//		data[step] = (float)elapsedTime;
+//		++step;
+//	}
+//
+//}
+//void Exercise3(float* data)
+//{
+//	std::vector<GameObject3D> arrGameObjAlt{};
+//	arrGameObjAlt.resize(1000000);
+//
+//	int step = 0;
+//	for (size_t stepsize = 1; stepsize <= 1024; stepsize *= 2)
+//	{
+//		auto start = std::chrono::high_resolution_clock::now();
+//		for (size_t amount = 0; amount < 3; amount++)
+//		{
+//
+//			for (size_t i = 0; i < arrGameObjAlt.size(); i += stepsize)
+//			{
+//				arrGameObjAlt[i].ID *= 2;
+//			}
+//		}
+//		auto end = std::chrono::high_resolution_clock::now();
+//		auto elapsedTime = duration_cast<std::chrono::microseconds>(end - start).count();
+//		data[step] = (float)elapsedTime;
+//		++step;
+//	}
+//
+//}
+//constexpr size_t data_count = 10;
+//float y_data1[data_count];
+//float y_data2[data_count];
+//float y_data3[data_count];
 void dae::Renderer::Render() const
 {
 	const auto& color = GetBackgroundColor();
@@ -146,7 +146,7 @@ void dae::Renderer::Render() const
 	ImGui_ImplSDL2_NewFrame(m_window);
 	ImGui::NewFrame();
 
-	ImGui::Begin("Exercise 1");
+	/*ImGui::Begin("Exercise 1");
 	
 	if (ImGui::Button("trash the cash"))
 	{
@@ -207,7 +207,7 @@ void dae::Renderer::Render() const
 	ImGui::Plot("plot3", conf3);
 
 
-	ImGui::End();
+	ImGui::End();*/
 
 	//ImGui::ShowDemoWindow();
 	ImGui::Render();

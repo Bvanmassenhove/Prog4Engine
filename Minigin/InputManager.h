@@ -7,6 +7,7 @@
 #include "ButtonCommands.h"
 #include "Singleton.h"
 #include "controller.h"
+#include "MovementComponent.h"
 
 
 namespace dae
@@ -23,6 +24,12 @@ namespace dae
 		std::unique_ptr<Command > pCommand;
 		InputType type;
 	};
+	struct KeyboardComands
+	{
+		SDL_Keycode button;
+		std::unique_ptr<Command > pCommand;
+		InputType type;
+	};
 	class InputManager final : public Singleton<InputManager>
 	{
 		XINPUT_STATE m_CurrentState{};
@@ -30,11 +37,13 @@ namespace dae
 		SDL_Event m_SDLEvent{};
 
 		std::vector<std::unique_ptr<Controller>> m_pControllers;
-		std::vector<ControllerComands> m_CommandButtons;
+		std::vector<ControllerComands> m_ControllerCommandButtons;
+		std::vector<KeyboardComands> m_KeyBoardCommandButtons;
 	public:
-		InputManager();
+		InputManager() = default;
 		~InputManager();
 		bool ProcessInput();
+		void AddController(MovementComponent* moveComponent, int ID, bool isController);
 
 	};
 
