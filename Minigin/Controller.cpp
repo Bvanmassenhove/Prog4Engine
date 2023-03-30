@@ -11,7 +11,7 @@ class Controller::ControllerImpl
 {
 	XINPUT_STATE previousState{};
 	XINPUT_STATE currentState{};
-	
+		
 	WORD buttonPressedThisFrame;
 	WORD buttonReleasedThisFrame;
 
@@ -39,7 +39,6 @@ public:
 	bool IsDownThisFrame(unsigned int button) const { return buttonPressedThisFrame & button; }
 	bool IsUpThisFrame(unsigned int button) const { return buttonReleasedThisFrame & button; }
 	bool IsPressed(unsigned int button) const { return currentState.Gamepad.wButtons & button; }
-
 };
 
 Controller::Controller(int controllerIndex)
@@ -68,4 +67,5 @@ bool Controller::IsPressed(ControllerButton button) const
 {
 	return pImpl->IsPressed(static_cast<unsigned int>(button));
 }
+
 

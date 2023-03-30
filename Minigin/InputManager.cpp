@@ -63,24 +63,21 @@ bool dae::InputManager::ProcessInput()
 	return true;
 }
 
-void dae::InputManager::AddController(MovementComponent* moveComponent, int ID,bool isController)
+void dae::InputManager::AddController(int ID)
 {
-	m_pControllers.push_back(std::make_unique<Controller>(ID));
-	if (isController)
+
+	if (ID == m_pControllers.size())
 	{
-		//command buttons get added when more controllers are added ... maybe move command buttons into the controller object instead
-		m_ControllerCommandButtons.push_back(ControllerComands{ Controller::ControllerButton::DpadUp,std::make_unique<MoveUp>(moveComponent),InputType::Pressed });
-		m_ControllerCommandButtons.push_back(ControllerComands{ Controller::ControllerButton::DpadLeft,std::make_unique<MoveLeft>(moveComponent),InputType::Pressed });
-		m_ControllerCommandButtons.push_back(ControllerComands{ Controller::ControllerButton::DpadRight,std::make_unique<MoveRight>(moveComponent),InputType::Pressed });
-		m_ControllerCommandButtons.push_back(ControllerComands{ Controller::ControllerButton::DpadDown,std::make_unique<MoveDown>(moveComponent),InputType::Pressed });
+		m_pControllers.push_back(std::make_unique<Controller>(ID));
 	}
-	else
-	{
-		//command buttons get added when more controllers are added ... maybe move command buttons into the controller object instead
-		m_KeyBoardCommandButtons.push_back(KeyboardComands{ SDLK_w,std::make_unique<MoveUp>(moveComponent),InputType::Pressed });
-		m_KeyBoardCommandButtons.push_back(KeyboardComands{ SDLK_a,std::make_unique<MoveLeft>(moveComponent),InputType::Pressed });
-		m_KeyBoardCommandButtons.push_back(KeyboardComands{ SDLK_d,std::make_unique<MoveRight>(moveComponent),InputType::Pressed });
-		m_KeyBoardCommandButtons.push_back(KeyboardComands{ SDLK_s,std::make_unique<MoveDown>(moveComponent),InputType::Pressed });
-	}
-	
+}
+
+void dae::InputManager::AddCommand(int ID, Controller::ControllerButton button, std::unique_ptr<Command> pCommand, InputType type)
+{
+	m_ControllerCommandButtons.push_back(ControllerComands{ ID, button, std::move(pCommand), type });
+}
+
+void dae::InputManager::AddCommand(int ID, SDL_Keycode button, std::unique_ptr<Command> pCommand, InputType type)
+{
+	m_KeyBoardCommandButtons.push_back(KeyboardComands{ ID, button, std::move(pCommand), type });
 }

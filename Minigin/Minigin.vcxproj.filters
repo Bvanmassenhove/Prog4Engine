@@ -17,21 +17,18 @@
     <Filter Include="Engine\imgui">
       <UniqueIdentifier>{77fa341d-6d94-4cf0-933d-1f6a4f5bf2cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\input">
+      <UniqueIdentifier>{3686d788-8ea3-4b14-b1e5-3b7f8dfc08ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\render">
+      <UniqueIdentifier>{4ebf5eca-f5d0-43ba-b9ad-6e2bdbcf06fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene.h">
       <Filter>Project</Filter>
     </ClInclude>
-    <ClInclude Include="Font.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Minigin.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
@@ -41,9 +38,6 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Singleton.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture2D.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
@@ -94,26 +88,30 @@
     <ClInclude Include="..\3rdParty\imgui\imgui_plot.h">
       <Filter>Engine\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="ButtonCommands.h" />
-    <ClInclude Include="Controller.h" />
-    <ClInclude Include="MovementComponent.h">
-      <Filter>Engine\GameComponents</Filter>
+    <ClInclude Include="InputManager.h">
+      <Filter>Engine\input</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Engine\input</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonCommands.h">
+      <Filter>Engine\input</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Engine\render</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Engine\render</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>Engine\render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Font.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Project</Filter>
     </ClCompile>
     <ClCompile Include="Minigin.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
@@ -123,9 +121,6 @@
       <Filter>Project</Filter>
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture2D.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
@@ -170,9 +165,20 @@
     <ClCompile Include="..\3rdParty\imgui\imgui_plot.cpp">
       <Filter>Engine\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Controller.cpp" />
-    <ClCompile Include="MovementComponent.cpp">
-      <Filter>Engine\GameComponents</Filter>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Engine\input</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Engine\input</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Engine\render</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Engine\render</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture2D.cpp">
+      <Filter>Engine\render</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

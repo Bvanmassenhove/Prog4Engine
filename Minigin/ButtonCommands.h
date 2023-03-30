@@ -1,43 +1,68 @@
 #pragma once
-#include "MovementComponent.h"
+#include "GameObject.h"
 
 namespace dae
 {
 	class Command
 	{
-	protected:
-		MovementComponent* GetMovementComponent() const { return movementComponent; }
 	public:
-		explicit Command(MovementComponent* moveComponent): movementComponent(moveComponent){};
+		explicit Command(){};
 		virtual ~Command() = default;
 		virtual void Execute() = 0;
 	private:
-		MovementComponent* movementComponent;
 	};
 
-	class MoveUp : public Command
+	class MoveUpDown : public Command
 	{
 	public:
-		MoveUp(MovementComponent* moveComponent): Command(moveComponent) {};
-		void Execute() override { GetMovementComponent()->MoveUp(); };
-	};
-	class MoveLeft : public Command
-	{
-	public:
-		MoveLeft(MovementComponent* moveComponent) : Command(moveComponent) {};
-		void Execute() override { GetMovementComponent()->MoveLeft(); };
-	};
-	class MoveRight : public Command
-	{
-	public:
-		MoveRight(MovementComponent* moveComponent) : Command(moveComponent) {};
-		void Execute() override { GetMovementComponent()->MoveRight(); };
-	};
-	class MoveDown : public Command
-	{
-	public:
-		MoveDown(MovementComponent* moveComponent) : Command(moveComponent) {};
-		void Execute() override { GetMovementComponent()->MoveDown(); };
+		MoveUpDown(GameObject* gameObject, bool moveUp,float moveSpeed)
+			: gameObject(gameObject),
+			moveUp(moveUp),
+			moveSpeed(moveSpeed)
+		{};
+		void Execute() override 
+		{ 
+			glm::vec3 pos = gameObject->GetLocalPos();
+			if (moveUp)
+			{
+				gameObject->SetLocalPos(glm::vec3{ pos.x, pos.y - moveSpeed, pos.z });
+			}
+			else
+			{
+				gameObject->SetLocalPos(glm::vec3{ pos.x, pos.y + moveSpeed, pos.z });
+			}
+			
+		};
+	private:
+		GameObject* gameObject;
+		bool moveUp;
+		float moveSpeed;
 	};
 
+	class MoveLeftRight : public Command
+	{
+	public:
+		MoveLeftRight(GameObject* gameObject, bool moveLeft, float moveSpeed)
+			: gameObject(gameObject),
+			moveLeft(moveLeft),
+			moveSpeed(moveSpeed)
+		{};
+		void Execute() override
+		{
+			glm::vec3 pos = gameObject->GetLocalPos();
+			if (moveLeft)
+			{
+				gameObject->SetLocalPos(glm::vec3{ pos.x - moveSpeed, pos.y, pos.z });
+			}
+			else
+			{
+				gameObject->SetLocalPos(glm::vec3{ pos.x + moveSpeed, pos.y, pos.z });
+			}
+
+		};
+	private:
+		GameObject* gameObject;
+		bool moveLeft;
+		float moveSpeed;
+	};
 }
