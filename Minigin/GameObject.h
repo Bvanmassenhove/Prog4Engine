@@ -3,6 +3,7 @@
 #include <vector>
 #include "Transform.h"
 #include "BaseComponent.h"
+#include "Observer.h"
 #include <string>
 
 namespace dae
@@ -20,7 +21,10 @@ namespace dae
 
 		void Update(float deltatime);
 		void Render();
-		void AddComponent(BaseComponent* component);
+		void AddComponent(BaseComponent* component)
+		{
+			m_Components.push_back(component);
+		}
 		template <typename T> T* GetComponent() const
 		{
 			for (BaseComponent* component : m_Components)
@@ -44,6 +48,29 @@ namespace dae
 			return false;
 		}
 
+		void AddObserver(Observer* observer)
+		{
+			m_Observers.push_back(observer);
+		}
+		template <typename T> bool RemoveObserver(T* ToRemoveObserver)
+		{
+
+			for (Observer* observer : m_Observers)
+			{
+				if (dynamic_cast<T*>(observer))
+				{
+					m_Observers.erase(std::remove(m_Observers.begin(), m_Observers.end(), ToRemoveObserver), m_Observers.end());
+					return true;
+				}
+			}
+			return false;
+		}
+		void NotifyObservers (int event)
+		{
+			for(auto observer : m_Observers) 
+				observer->Notify(event,this);
+		}
+
 		void SetParent(GameObject* pParent, bool keepWorldPos);
 		void SetLocalPos(const glm::vec3& pos);
 		const glm::vec3& GetLocalPos() { return m_LocalTransform; };
@@ -64,6 +91,7 @@ namespace dae
 		GameObject* m_pParent{ nullptr };
 		std::vector <GameObject*> m_pchilderen;
 		std::vector<BaseComponent*> m_Components;
+		std::vector<Observer*> m_Observers;
 		glm::vec3 m_WorldTransform;
 		glm::vec3 m_LocalTransform;
 		bool m_positionIsDirty{ true };

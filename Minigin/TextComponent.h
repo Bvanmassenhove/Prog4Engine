@@ -10,6 +10,7 @@ namespace dae
 	{
 	public:
 		explicit TextComponent(const std::string& text, const std::shared_ptr<Font>& font, GameObject* object);
+		explicit TextComponent(const std::string& text, const std::shared_ptr<Font>& font, GameObject* object , glm::vec3 Transform);
 		virtual ~TextComponent() = default;
 		TextComponent(const TextComponent& other) = delete;
 		TextComponent(TextComponent&& other) = delete;
@@ -26,7 +27,7 @@ namespace dae
 
 		bool m_NeedsUpdate;
 		std::string m_Text;
-		dae::Transform m_Transform;
+		glm::vec3 m_Transform;
 		std::shared_ptr<Font> m_Font;
 		std::shared_ptr<Texture2D> m_Texture;
 	};

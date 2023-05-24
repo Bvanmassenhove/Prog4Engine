@@ -27,6 +27,7 @@ void Scene::RemoveAll()
 	m_objects.clear();
 }
 
+
 void Scene::Update(float deltaTime)
 {
 	//todo mark for delete implement 

@@ -21,6 +21,11 @@ GameObject::~GameObject()
 		child = nullptr;
 	}
 	m_pchilderen.clear();
+	for (auto Observers : m_Observers)
+	{
+		delete Observers;
+	}
+	m_Observers.clear();
 };
 
 void GameObject::Update(float deltatime)
@@ -52,12 +57,6 @@ void GameObject::Render()
 		}
 	}
 }
-
-void GameObject::AddComponent(BaseComponent* component)
-{
-	m_Components.push_back(component);
-}
-
 void GameObject::SetParent(GameObject* pParent, bool keepWorldPos)
 {
 	if (pParent == nullptr)

@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdexcept>
 #define WIN32_LEAN_AND_MEAN 
 #include <windows.h>
@@ -94,7 +95,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
 		const float deltaTime = duration<float>(currentTime - lastTime).count();
 		lastTime = currentTime;
 		m_Lag += deltaTime;
-		doContinue = input.ProcessInput();
+		doContinue = input.ProcessInput(deltaTime);
 
 		//fixed update only for physics or networking
 		//while (m_Lag >= m_FixedTimeStep)

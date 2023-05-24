@@ -5,9 +5,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Project">
-      <UniqueIdentifier>{8636ac9d-3a74-4c13-9ea5-e3bcc011de60}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{a17761fe-29f0-4bbc-b9c5-6bbc474d85e0}</UniqueIdentifier>
     </Filter>
@@ -23,11 +20,11 @@
     <Filter Include="Engine\render">
       <UniqueIdentifier>{4ebf5eca-f5d0-43ba-b9ad-6e2bdbcf06fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Services">
+      <UniqueIdentifier>{b63d991c-2303-4115-9ea4-5c7dd44d1237}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Scene.h">
-      <Filter>Project</Filter>
-    </ClInclude>
     <ClInclude Include="Minigin.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -43,13 +40,7 @@
     <ClInclude Include="Transform.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Engine\GameComponents</Filter>
-    </ClInclude>
     <ClInclude Include="BaseComponent.h">
-      <Filter>Engine\GameComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureComponent.h">
       <Filter>Engine\GameComponents</Filter>
     </ClInclude>
     <ClInclude Include="TextComponent.h">
@@ -94,9 +85,6 @@
     <ClInclude Include="Controller.h">
       <Filter>Engine\input</Filter>
     </ClInclude>
-    <ClInclude Include="ButtonCommands.h">
-      <Filter>Engine\input</Filter>
-    </ClInclude>
     <ClInclude Include="Font.h">
       <Filter>Engine\render</Filter>
     </ClInclude>
@@ -106,28 +94,44 @@
     <ClInclude Include="Texture2D.h">
       <Filter>Engine\render</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureComponent.h">
+      <Filter>Engine\GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteComponent.h">
+      <Filter>Engine\GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Observer.h">
+      <Filter>Engine\GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceLocator.h">
+      <Filter>Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSystem.h">
+      <Filter>Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthComponent.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Project</Filter>
-    </ClCompile>
     <ClCompile Include="Minigin.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Project</Filter>
-    </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Engine\GameComponents</Filter>
     </ClCompile>
     <ClCompile Include="TextureComponent.cpp">
       <Filter>Engine\GameComponents</Filter>
@@ -180,5 +184,21 @@
     <ClCompile Include="Texture2D.cpp">
       <Filter>Engine\render</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteComponent.cpp">
+      <Filter>Engine\GameComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceLocator.cpp">
+      <Filter>Engine\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSystem.cpp">
+      <Filter>Engine\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthComponent.cpp" />
   </ItemGroup>
 </Project>

@@ -12,8 +12,12 @@ using namespace dae;
 TextComponent::TextComponent(const std::string& text, const std::shared_ptr<Font>& font, GameObject* object)
 	: m_NeedsUpdate(true), m_Text(text), m_Font(font), m_Texture(nullptr) , BaseComponent(object)
 {
-	m_Transform.SetPosition(object->GetWorldPos().x, object->GetWorldPos().y, object->GetWorldPos().z);
+	m_Transform = object->GetWorldPos();
 }
+
+TextComponent::TextComponent(const std::string& text, const std::shared_ptr<Font>& font, GameObject* object, glm::vec3 transform)
+	: m_NeedsUpdate(true), m_Text(text), m_Font(font), m_Texture(nullptr), BaseComponent(object), m_Transform(transform)
+{}
 
 void TextComponent::Update(float)
 {
@@ -40,8 +44,7 @@ void TextComponent::Render() const
 {
 	if (m_Texture != nullptr)
 	{
-		const auto pos = m_Transform.GetPosition();
-		dae::Renderer::GetInstance().RenderTexture(*m_Texture, pos.x, pos.y);
+		dae::Renderer::GetInstance().RenderTexture(*m_Texture, m_Transform.x, m_Transform.y);
 	}
 }
 
@@ -54,6 +57,7 @@ void TextComponent::SetText(const std::string& text)
 
 void TextComponent::SetPosition(const float x, const float y)
 {
-	m_Transform.SetPosition(x, y, 0.0f);
+	m_Transform.x = x;
+	m_Transform.y = y;
 }
 

@@ -30,6 +30,7 @@ namespace dae
 		bool IsDown(ControllerButton button) const;
 		bool IsUp(ControllerButton button) const;
 		bool IsPressed(ControllerButton button) const;
+		int GetControllerID() const;
 
 		explicit Controller(int controllerIndex);
 		~Controller();

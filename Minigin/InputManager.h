@@ -4,7 +4,8 @@
 #include <XInput.h>
 #include <SDL.h>
 #include <vector>
-#include "ButtonCommands.h"
+#include <memory>
+#include "Command.h"
 #include "Singleton.h"
 #include "controller.h"
 
@@ -21,6 +22,7 @@ namespace dae
 	{
 		int ControllerID;
 		Controller::ControllerButton button;
+		
 		std::unique_ptr<Command> pCommand;
 		InputType type;
 	};
@@ -38,16 +40,16 @@ namespace dae
 		SDL_Event m_SDLEvent{};
 
 		std::vector<std::unique_ptr<Controller>> m_pControllers;
-		std::vector<ControllerComands> m_ControllerCommandButtons;
-		std::vector<KeyboardComands> m_KeyBoardCommandButtons;
+		std::vector<std::vector<ControllerComands>> m_ControllerCommandButtons;
+		std::vector<std::vector<KeyboardComands>> m_KeyBoardCommandButtons;
 	public:
 		InputManager() = default;
 		~InputManager();
-		bool ProcessInput();
+		bool ProcessInput(float deltaTime);
 		void AddController(int ID);
-		void AddCommand(int ID, Controller::ControllerButton button, std::unique_ptr<Command> pCommand, InputType type);
-		void AddCommand(int ID, SDL_Keycode button, std::unique_ptr<Command> pCommand, InputType type);
-
+		void SetTotalScenes(int NrScene);
+		void AddCommand(int SceneID, int ControllerID, Controller::ControllerButton button, std::unique_ptr<Command> pCommand, InputType type);
+		void AddCommand(int SceneID, int ControllerID, SDL_Keycode button, std::unique_ptr<Command> pCommand, InputType type);
 	};
 
 }

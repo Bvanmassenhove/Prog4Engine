@@ -8,6 +8,7 @@ using namespace dae;
 TextureComponent::TextureComponent(std::string& filename, GameObject* object)
 	:BaseComponent(object)
 {
+	
 	m_Texture = dae::ResourceManager::GetInstance().LoadTexture(filename);
 	m_Transform.SetPosition(object->GetWorldPos().x, object->GetWorldPos().y, object->GetWorldPos().z);
 	

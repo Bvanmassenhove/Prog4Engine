@@ -248,5 +248,21 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	dst.h = static_cast<int>(height);
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
+void dae::Renderer::RenderSprite(const Texture2D& texture, float x, float y, float texX, float texY, float texWidth, float texHeight) const
+{
+	SDL_Rect dst{};
+	
+	dst.x = static_cast<int>(x);
+	dst.y = static_cast<int>(y);
+	dst.w = static_cast<int>(texWidth);
+	dst.h = static_cast<int>(texHeight);
+	SDL_Rect src{};
+	src.x = static_cast<int>(texX);
+	src.y = static_cast<int>(texY);
+	src.w = static_cast<int>(texWidth);
+	src.h = static_cast<int>(texHeight);
+
+	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), &src, &dst);
+}																	
 
 inline SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_renderer; }

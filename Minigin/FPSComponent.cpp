@@ -21,4 +21,4 @@ void FPSComponent::Update(float deltatime)
 	const GameObject* owner = BaseComponent::GetOwner();
 	owner->GetComponent<TextComponent>()->SetText(std::to_string(m_FPS));
 }
-void FPSComponent::Render() const {};
+void FPSComponent::Render() const {}

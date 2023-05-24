@@ -30,7 +30,7 @@ public:
 	{
 		CopyMemory(&previousState, &currentState, sizeof(XINPUT_STATE));
 		ZeroMemory(&currentState, sizeof(XINPUT_STATE));
-		XInputGetState(0, &currentState);
+		XInputGetState(_controllerIndex, &currentState);
 
 		auto buttonChanges = currentState.Gamepad.wButtons ^ previousState.Gamepad.wButtons;
 		buttonPressedThisFrame = buttonChanges & currentState.Gamepad.wButtons;
@@ -39,6 +39,7 @@ public:
 	bool IsDownThisFrame(unsigned int button) const { return buttonPressedThisFrame & button; }
 	bool IsUpThisFrame(unsigned int button) const { return buttonReleasedThisFrame & button; }
 	bool IsPressed(unsigned int button) const { return currentState.Gamepad.wButtons & button; }
+	int GetControllerID() const { return _controllerIndex; }
 };
 
 Controller::Controller(int controllerIndex)
@@ -68,4 +69,7 @@ bool Controller::IsPressed(ControllerButton button) const
 	return pImpl->IsPressed(static_cast<unsigned int>(button));
 }
 
-
+int Controller::GetControllerID() const
+{
+	return pImpl->GetControllerID();
+}
