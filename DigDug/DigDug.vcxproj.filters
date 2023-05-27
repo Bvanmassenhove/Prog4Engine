@@ -16,10 +16,22 @@
     <Filter Include="Source Files\observers">
       <UniqueIdentifier>{e02e75c5-f3d9-4b1d-82ac-4ebec6f4a2b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\CustomComponents">
+      <UniqueIdentifier>{07171fc8-5eaa-49da-9379-5c353ecc63eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DigDug.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Minigin\PlayerComponent.cpp">
+      <Filter>Source Files\CustomComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Minigin\HealthComponent.cpp">
+      <Filter>Source Files\CustomComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="TileComponent.cpp">
+      <Filter>Source Files\CustomComponents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -32,8 +44,20 @@
     <ClInclude Include="ButtonCommands.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="events.h">
+    <ClInclude Include="..\Minigin\PlayerComponent.h">
+      <Filter>Source Files\CustomComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Minigin\HealthComponent.h">
+      <Filter>Source Files\CustomComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEvents.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sounds.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TileComponent.h">
+      <Filter>Source Files\CustomComponents</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

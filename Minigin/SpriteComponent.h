@@ -28,7 +28,7 @@ namespace dae
 	class SpriteComponent final : public BaseComponent
 	{
 	public:
-		SpriteComponent(GameObject* object, std::shared_ptr<Sprite> sprite);
+		SpriteComponent(GameObject* object, std::shared_ptr<Sprite> sprite, float scale);
 		~SpriteComponent();
 		SpriteComponent(const SpriteComponent& other) = delete;
 		SpriteComponent(SpriteComponent&& other) = delete;
@@ -48,5 +48,6 @@ namespace dae
 		int m_DrawnSpriteID{0};
 		Transform m_Transform{};
 		Animation m_CurrentAnimation{ Animation::moveRight };
+		float m_Scale = 1;
 	};
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "Observer.h"
 #include "HealthComponent.h"
+#include "GameEvents.h"
 
 namespace dae
 {

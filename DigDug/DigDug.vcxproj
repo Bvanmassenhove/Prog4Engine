@@ -161,13 +161,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Minigin\HealthComponent.cpp" />
+    <ClCompile Include="..\Minigin\PlayerComponent.cpp" />
     <ClCompile Include="DigDug.cpp" />
+    <ClCompile Include="TileComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Minigin\HealthComponent.h" />
+    <ClInclude Include="..\Minigin\PlayerComponent.h" />
     <ClInclude Include="Achievement.h" />
     <ClInclude Include="ButtonCommands.h" />
-    <ClInclude Include="events.h" />
+    <ClInclude Include="GameEvents.h" />
     <ClInclude Include="OnDeath.h" />
+    <ClInclude Include="Sounds.h" />
+    <ClInclude Include="TileComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

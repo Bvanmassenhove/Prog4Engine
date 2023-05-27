@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <SDL.h>
 #include <iostream>
+#include <fstream>
 
 #if _DEBUG
 // ReSharper disable once CppUnusedIncludeDirective
@@ -23,8 +24,11 @@
 #include "HealthComponent.h"
 #include "SpriteComponent.h"
 #include "buttonCommands.h"
+#include "PlayerComponent.h"
+#include "CollisionComponent.h"
+#include "TileComponent.h"
 
-#include "events.h"
+#include "GameEvents.h"
 #include "OnDeath.h"
 #include "Achievement.h"
 
@@ -35,6 +39,327 @@ using namespace dae;
 void thread_function(int x)
 {
 	std::cout << "inside thread x: " << ++x << "\n";
+}
+
+
+
+std::shared_ptr<GameObject>MakePlayer(int SceneID , int ControllerID , glm::vec3 location)
+{
+	auto& inputmanager = InputManager::GetInstance();
+	auto& collisionManager = CollisionManager::GetInstance();
+
+	/// player
+	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 24);
+	auto player = std::make_shared<GameObject>();
+	player->SetLocalPos(location);
+	//add sprites
+	auto pSprite0 = std::make_shared<Sprite>();
+	pSprite0->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveRight.png");
+	pSprite0->cols = 1;
+	pSprite0->frames = 2;
+	pSprite0->currentFrame = 0;
+	pSprite0->accumulatedTime = 0.f;
+	pSprite0->frameTime = 0.2f;
+	player->AddComponent(new SpriteComponent(player.get(), pSprite0, 2.f));
+
+	auto pSprite1 = std::make_shared<Sprite>();
+	pSprite1->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveDown.png");
+	pSprite1->cols = 1;
+	pSprite1->frames = 2;
+	pSprite1->currentFrame = 0;
+	pSprite1->accumulatedTime = 0.f;
+	pSprite1->frameTime = 0.2f;
+	player->GetComponent<SpriteComponent>()->AddSprite(pSprite1);
+
+	auto pSprite2 = std::make_shared<Sprite>();
+	pSprite2->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveLeft.png");
+	pSprite2->cols = 1;
+	pSprite2->frames = 2;
+	pSprite2->currentFrame = 0;
+	pSprite2->accumulatedTime = 0.f;
+	pSprite2->frameTime = 0.2f;
+	player->GetComponent<SpriteComponent>()->AddSprite(pSprite2);
+
+	auto pSprite3 = std::make_shared<Sprite>();
+	pSprite3->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveUp.png");
+	pSprite3->cols = 1;
+	pSprite3->frames = 2;
+	pSprite3->currentFrame = 0;
+	pSprite3->accumulatedTime = 0.f;
+	pSprite3->frameTime = 0.2f;
+	player->GetComponent<SpriteComponent>()->AddSprite(pSprite3);
+
+	//score
+	player->AddComponent(new TextComponent("X", font, player.get(), glm::vec3{ 0, 60,0 }));
+	//health
+	std::string texturepath = "Sprites/PlayerHealth.png";
+	player->AddComponent(new HealthComponent{ player.get(), 4 , texturepath ,100.f });
+	player->AddObserver(new OnDeath{});
+
+
+	float size = 28; // 32 - 4 to make the sprite 28/28
+
+	rectf playerRect{ player->GetWorldPos().x +2,player->GetWorldPos().y -2 , size , size };
+	player->AddComponent(new CollisionComponent{ player.get() ,playerRect , Player, true });
+	collisionManager.AddCollisionComponent(player->GetComponent<CollisionComponent>(), SceneID);
+	player->AddComponent(new PlayerComponent{ player.get(),location });
+
+
+	float moveSpeed = 60.f;
+	inputmanager.AddController(ControllerID);
+	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadUp, std::make_unique<MoveUpDown>(player.get(), true, moveSpeed), InputType::Pressed);
+	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadDown, std::make_unique<MoveUpDown>(player.get(), false, moveSpeed), InputType::Pressed);
+	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadLeft, std::make_unique<MoveLeftRight>(player.get(), true, moveSpeed), InputType::Pressed);
+	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadRight, std::make_unique<MoveLeftRight>(player.get(), false, moveSpeed), InputType::Pressed);
+	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonA, std::make_unique<ChangeHUD>(player.get(), true), InputType::Down);
+	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonB, std::make_unique<ChangeHUD>(player.get(), false), InputType::Down);
+	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonX, std::make_unique<Shoot>(player.get()), InputType::Down);
+	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::Start, std::make_unique<ChangeScene>(player.get(), 0), InputType::Down);
+
+	return player;
+}
+
+std::shared_ptr<GameObject>MakeFlygar(int SceneID, int ControllerID, glm::vec3 location , bool player)
+{
+	auto& inputmanager = InputManager::GetInstance();
+	auto& collisionManager = CollisionManager::GetInstance();
+	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 24);
+
+	/// player2
+	auto flygar = std::make_shared<GameObject>();
+	flygar->SetLocalPos(location);
+	//add sprites
+	auto pSprite0 = std::make_shared<Sprite>();
+	pSprite0->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/FlygarMoveRight.png");
+	pSprite0->cols = 1;
+	pSprite0->frames = 2;
+	pSprite0->currentFrame = 0;
+	pSprite0->accumulatedTime = 0.f;
+	pSprite0->frameTime = 0.2f;
+	flygar->AddComponent(new SpriteComponent(flygar.get(), pSprite0, 2.f));
+	flygar->GetComponent<SpriteComponent>()->AddSprite(pSprite0);
+
+	auto pSprite1 = std::make_shared<Sprite>();
+	pSprite1->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/FlygarMoveLeft.png");
+	pSprite1->cols = 1;
+	pSprite1->frames = 2;
+	pSprite1->currentFrame = 0;
+	pSprite1->accumulatedTime = 0.f;
+	pSprite1->frameTime = 0.2f;
+	flygar->GetComponent<SpriteComponent>()->AddSprite(pSprite1);
+	flygar->GetComponent<SpriteComponent>()->AddSprite(pSprite1);
+
+
+	float size = 28; // 32 - 4 to make the sprite 28/28
+
+	rectf flygarRect{ flygar->GetWorldPos().x +2,flygar->GetWorldPos().y -2,size,size };
+	flygar->AddComponent(new CollisionComponent{ flygar.get() ,flygarRect , Flygar, true });
+	collisionManager.AddCollisionComponent(flygar->GetComponent<CollisionComponent>(), SceneID);
+	flygar->AddComponent(new PlayerComponent{ flygar.get(),location });
+
+	if (player)
+	{
+		//score
+		flygar->AddComponent(new TextComponent("X", font, flygar.get(), glm::vec3{ 0, 60,0 }));
+		//health
+		std::string texturepath = "Sprites/PlayerHealth.png";
+		flygar->AddComponent(new HealthComponent{ flygar.get(), 4 , texturepath ,100.f });
+		flygar->AddObserver(new OnDeath{});
+
+
+		float moveSpeed = 60.f;
+		inputmanager.AddController(ControllerID);
+		inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadUp, std::make_unique<MoveUpDown>(flygar.get(), true, moveSpeed), InputType::Pressed);
+		inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadDown, std::make_unique<MoveUpDown>(flygar.get(), false, moveSpeed), InputType::Pressed);
+		inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadLeft, std::make_unique<MoveLeftRight>(flygar.get(), true, moveSpeed), InputType::Pressed);
+		inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadRight, std::make_unique<MoveLeftRight>(flygar.get(), false, moveSpeed), InputType::Pressed);
+		inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonA, std::make_unique<ChangeHUD>(flygar.get(), true), InputType::Down);
+		inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonB, std::make_unique<ChangeHUD>(flygar.get(), false), InputType::Down);
+		inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonX, std::make_unique<Shoot>(flygar.get()), InputType::Down);
+	}
+	
+
+	return flygar;
+}
+
+std::shared_ptr<GameObject>MakePooka(int SceneID , glm::vec3 location)
+{
+	auto& collisionManager = CollisionManager::GetInstance();
+
+	auto pooka = std::make_shared<GameObject>();
+	pooka->SetLocalPos(location);
+
+	//add sprites
+	auto pSprite4 = std::make_shared<Sprite>();
+	pSprite4->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PookaMoveRight.png");
+	pSprite4->cols = 1;
+	pSprite4->frames = 2;
+	pSprite4->currentFrame = 0;
+	pSprite4->accumulatedTime = 0.f;
+	pSprite4->frameTime = 0.2f;
+	pooka->AddComponent(new SpriteComponent(pooka.get(), pSprite4, 2.f));
+	pooka->GetComponent<SpriteComponent>()->AddSprite(pSprite4);
+
+	auto pSprite5 = std::make_shared<Sprite>();
+	pSprite5->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PookaMoveLeft.png");
+	pSprite5->cols = 1;
+	pSprite5->frames = 2;
+	pSprite5->currentFrame = 0;
+	pSprite5->accumulatedTime = 0.f;
+	pSprite5->frameTime = 0.2f;
+	pooka->GetComponent<SpriteComponent>()->AddSprite(pSprite5);
+	pooka->GetComponent<SpriteComponent>()->AddSprite(pSprite5);
+
+	float size = 28; // 32 - 4 to make the sprite 28/28
+
+	rectf pookaRect{ pooka->GetWorldPos().x +2,pooka->GetWorldPos().y -2,size,size };
+	pooka->AddComponent(new CollisionComponent{ pooka.get() ,pookaRect , Pooka, true });
+	collisionManager.AddCollisionComponent(pooka->GetComponent<CollisionComponent>(), SceneID);
+
+	return pooka;
+}
+
+
+std::shared_ptr<GameObject>MakeTile(int SceneID, glm::vec3 location , std::string tileFile)
+{
+	auto& collisionManager = CollisionManager::GetInstance();
+
+	auto Tile = std::make_shared<GameObject>();
+	Tile->SetLocalPos(location);
+
+	float size = 28; // 32 - 4 to make the sprite 28/28
+
+	rectf TileRect{ Tile->GetWorldPos().x+2,Tile->GetWorldPos().y-2,size,size };
+	Tile->AddComponent(new CollisionComponent{ Tile.get() ,TileRect , Level, false });
+	collisionManager.AddCollisionComponent(Tile->GetComponent<CollisionComponent>(), SceneID);
+
+	Tile->AddComponent(new TileComponent(Tile.get(), tileFile));
+
+	return Tile;
+}
+
+void LoadLevel(int LevelID, dae::Scene& scene, int SceneID)
+{
+	auto dataPath = dae::ResourceManager::GetInstance().GetDataPath();
+	std::string levelPath;
+
+	//the level .txt files were made by Catherine Szobel
+	switch (LevelID)
+	{
+	case 1:
+		levelPath = "Levels/Level1.txt";
+		break;
+	case 2:
+		levelPath = "Levels/Level2.txt";
+		break;
+	case 3:
+		levelPath = "Levels/Level3.txt";
+		break;
+	default:
+		std::cout << "levelID not found \n";
+		break;
+	}
+
+	std::ifstream LevelFile(dataPath + levelPath);
+
+	int readValue = 0;
+	int XIndex = 0, YIndex = 0;
+	const int LevelCol = 20;
+	const float startingPosX = -32.f, startingPosY = 160.f;
+	const float TileWith = 32.f, TileHight = 32.f;
+	int TileType = 1;
+
+	while (LevelFile >> readValue)
+	{
+		switch (readValue)
+		{
+		case 0:
+			++XIndex;
+			if (XIndex >= LevelCol)
+			{
+				++YIndex;
+				XIndex = 0;
+			}
+			break;
+		case 1:
+			++XIndex;
+
+			switch (TileType)
+			{
+			case 1:
+				scene.Add(MakeTile(SceneID, { startingPosX + (TileWith * XIndex) , startingPosY + (TileHight * (YIndex - 1)),0.f }, dataPath + "Sprites/LevelTiles/TileLayer1.png"));
+				break;
+			case 2:
+				scene.Add(MakeTile(SceneID, { startingPosX + (TileWith * XIndex) , startingPosY + (TileHight * (YIndex - 1)),0.f }, dataPath + "Sprites/LevelTiles/TileLayer2.png"));
+				break;
+			case 3:
+				scene.Add(MakeTile(SceneID, { startingPosX + (TileWith * XIndex) , startingPosY + (TileHight * (YIndex - 1)),0.f }, dataPath + "Sprites/LevelTiles/TileLayer3.png"));
+				break;
+			case 4:
+				scene.Add(MakeTile(SceneID, { startingPosX + (TileWith * XIndex) , startingPosY + (TileHight * (YIndex - 1)),0.f }, dataPath + "Sprites/LevelTiles/TileLayer4.png"));
+				break;
+			default:
+				break;
+			}
+
+			if (XIndex % 20 == 0 && YIndex % 3 == 0 && YIndex !=0)
+			{
+				++TileType;
+			}
+
+			if (XIndex >= LevelCol)
+			{
+				++YIndex;
+				XIndex = 0;
+			}
+	
+			break;
+		case 2:
+			++XIndex;
+			if (XIndex >= LevelCol)
+			{
+				++YIndex;
+				XIndex = 0;
+			}
+
+			scene.Add(MakePlayer(SceneID, 0, { startingPosX + (TileWith * XIndex) , startingPosY + (TileHight * (YIndex - 1)),0.f }));
+
+			break;
+		case 3:
+			++XIndex;
+
+			scene.Add(MakePooka(SceneID, { startingPosX + (TileWith * XIndex) , startingPosY + (TileHight * (YIndex - 1)),0.f }));
+
+			if (XIndex >= LevelCol)
+			{
+				++YIndex;
+				XIndex = 0;
+			}
+			break;
+		case 4:
+			++XIndex;
+
+			scene.Add(MakeFlygar(SceneID,0, { startingPosX + (TileWith * XIndex) , startingPosY + (TileHight * (YIndex - 1)),0.f },false));
+
+			if (XIndex >= LevelCol)
+			{
+				++YIndex;
+				XIndex = 0;
+			}
+			break;
+		case 5:
+			++XIndex;
+			if (XIndex >= LevelCol)
+			{
+				++YIndex;
+				XIndex = 0;
+			}
+			break;
+		default:
+			std::cout << "levelID not found \n";
+			break;
+		}
+	}
 }
 
 void LoadMainMenu()
@@ -91,6 +416,7 @@ void LoadMainMenu()
 	ServiceLocator::Register_Sound_System(std::make_unique<SoundLogger>());
 	auto& soundManager = ServiceLocator::Get_Sound_System();
 	soundManager.AddSound("../Data/Sounds/DigDugShot.wav");
+	soundManager.AddSound("../Data/Sounds/GetHitSound.wav");
 }
 
 void LoadSingePlayer()
@@ -98,8 +424,7 @@ void LoadSingePlayer()
 	std::string texturepath;
 	auto& scene = SceneManager::GetInstance().CreateScene("Game : single Player");
 	int SceneID = 1;
-	auto& inputmanager = InputManager::GetInstance();
-
+	
 	///background
 	auto go = std::make_shared<GameObject>();
 	texturepath = "background.tga";
@@ -119,66 +444,9 @@ void LoadSingePlayer()
 	FPS->AddComponent(new TextComponent("X", font, FPS.get()));
 	scene.Add(FPS);
 
-	/// player
-	font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 24);
-	auto player = std::make_shared<GameObject>();
-	player->SetLocalPos(glm::vec3{ 300,300,0 });
-	//add sprites
-	auto pSprite0 = std::make_shared<Sprite>();
-	pSprite0->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveRight.png");
-	pSprite0->cols = 1;
-	pSprite0->frames = 2;
-	pSprite0->currentFrame = 0;
-	pSprite0->accumulatedTime = 0.f;
-	pSprite0->frameTime = 0.2f;
-	player->AddComponent(new SpriteComponent(player.get(), pSprite0));
+	
+	LoadLevel(1, scene, SceneID);
 
-	auto pSprite1 = std::make_shared<Sprite>();
-	pSprite1->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveDown.png");
-	pSprite1->cols = 1;
-	pSprite1->frames = 2;
-	pSprite1->currentFrame = 0;
-	pSprite1->accumulatedTime = 0.f;
-	pSprite1->frameTime = 0.2f;
-	player->GetComponent<SpriteComponent>()->AddSprite(pSprite1);
-
-	auto pSprite2 = std::make_shared<Sprite>();
-	pSprite2->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveLeft.png");
-	pSprite2->cols = 1;
-	pSprite2->frames = 2;
-	pSprite2->currentFrame = 0;
-	pSprite2->accumulatedTime = 0.f;
-	pSprite2->frameTime = 0.2f;
-	player->GetComponent<SpriteComponent>()->AddSprite(pSprite2);
-
-	auto pSprite3 = std::make_shared<Sprite>();
-	pSprite3->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveUp.png");
-	pSprite3->cols = 1;
-	pSprite3->frames = 2;
-	pSprite3->currentFrame = 0;
-	pSprite3->accumulatedTime = 0.f;
-	pSprite3->frameTime = 0.2f;
-	player->GetComponent<SpriteComponent>()->AddSprite(pSprite3);
-
-	//score
-	player->AddComponent(new TextComponent("X", font, player.get(), glm::vec3{ 0, 60,0 }));
-	//health
-	texturepath = "Sprites/PlayerHealth.png";
-	player->AddComponent(new HealthComponent{ player.get(), 4 , texturepath ,100.f });
-	player->AddObserver(new OnDeath{});
-
-	int ControllerID = 0;
-	float moveSpeed = 60.f;
-	inputmanager.AddController(ControllerID);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadUp, std::make_unique<MoveUpDown>(player.get(), true, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadDown, std::make_unique<MoveUpDown>(player.get(), false, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadLeft, std::make_unique<MoveLeftRight>(player.get(), true, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadRight, std::make_unique<MoveLeftRight>(player.get(), false, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonA, std::make_unique<ChangeHUD>(player.get(), true), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonB, std::make_unique<ChangeHUD>(player.get(), false), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonX, std::make_unique<Shoot>(player.get()), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::Start, std::make_unique<ChangeScene>(player.get(),0), InputType::Down);
-	scene.Add(player);
 }
 
 void LoadCoop()
@@ -186,7 +454,6 @@ void LoadCoop()
 	std::string texturepath;
 	auto& scene = SceneManager::GetInstance().CreateScene("Game : Coop");
 	int SceneID = 2;
-	auto& inputmanager = InputManager::GetInstance();
 
 
 	///background
@@ -208,98 +475,8 @@ void LoadCoop()
 	FPS->AddComponent(new TextComponent("X", font, FPS.get()));
 	scene.Add(FPS);
 
-	/// player
-	font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 24);
-	auto player1 = std::make_shared<GameObject>();
-	auto player2 = std::make_shared<GameObject>();
-	player1->SetLocalPos(glm::vec3{ 300,300,0 });
-	player2->SetLocalPos(glm::vec3{ 500,300,0 });
-	//add sprites
-	auto pSprite0 = std::make_shared<Sprite>();
-	pSprite0->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveRight.png");
-	pSprite0->cols = 1;
-	pSprite0->frames = 2;
-	pSprite0->currentFrame = 0;
-	pSprite0->accumulatedTime = 0.f;
-	pSprite0->frameTime = 0.2f;
-	player1->AddComponent(new SpriteComponent(player1.get(), pSprite0));
-	player2->AddComponent(new SpriteComponent(player2.get(), pSprite0));
-
-	auto pSprite1 = std::make_shared<Sprite>();
-	pSprite1->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveDown.png");
-	pSprite1->cols = 1;
-	pSprite1->frames = 2;
-	pSprite1->currentFrame = 0;
-	pSprite1->accumulatedTime = 0.f;
-	pSprite1->frameTime = 0.2f;
-	player1->GetComponent<SpriteComponent>()->AddSprite(pSprite1);
-	player2->GetComponent<SpriteComponent>()->AddSprite(pSprite1);
-
-	auto pSprite2 = std::make_shared<Sprite>();
-	pSprite2->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveLeft.png");
-	pSprite2->cols = 1;
-	pSprite2->frames = 2;
-	pSprite2->currentFrame = 0;
-	pSprite2->accumulatedTime = 0.f;
-	pSprite2->frameTime = 0.2f;
-	player1->GetComponent<SpriteComponent>()->AddSprite(pSprite2);
-	player2->GetComponent<SpriteComponent>()->AddSprite(pSprite2);
-
-	auto pSprite3 = std::make_shared<Sprite>();
-	pSprite3->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveUp.png");
-	pSprite3->cols = 1;
-	pSprite3->frames = 2;
-	pSprite3->currentFrame = 0;
-	pSprite3->accumulatedTime = 0.f;
-	pSprite3->frameTime = 0.2f;
-	player1->GetComponent<SpriteComponent>()->AddSprite(pSprite3);
-	player2->GetComponent<SpriteComponent>()->AddSprite(pSprite3);
-
-	//score
-	player1->AddComponent(new TextComponent("X", font, player1.get(), glm::vec3{ 0, 60,0 }));
-	player2->AddComponent(new TextComponent("X", font, player2.get(), glm::vec3{ 0, 100,0 }));
-	//health
-	texturepath = "Sprites/PlayerHealth.png";
-	player1->AddComponent(new HealthComponent{ player1.get(), 4 , texturepath ,100.f });
-	player2->AddComponent(new HealthComponent{ player2.get(), 4 , texturepath ,300.f });
-	player1->AddObserver(new OnDeath{});
-	player2->AddObserver(new OnDeath{});
-
-	int ControllerID = 0;
-	float moveSpeed = 60.f;
-	inputmanager.AddController(ControllerID);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadUp, std::make_unique<MoveUpDown>(player1.get(), true, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadDown, std::make_unique<MoveUpDown>(player1.get(), false, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadLeft, std::make_unique<MoveLeftRight>(player1.get(), true, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadRight, std::make_unique<MoveLeftRight>(player1.get(), false, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonA, std::make_unique<ChangeHUD>(player1.get(), true), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonB, std::make_unique<ChangeHUD>(player1.get(), false), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonX, std::make_unique<Shoot>(player1.get()), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::Start, std::make_unique<ChangeScene>(player1.get(), 0), InputType::Down);
-	//Keyboard for P1
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_w, std::make_unique<MoveUpDown>(player1.get(), true, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_s, std::make_unique<MoveUpDown>(player1.get(), false, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_a, std::make_unique<MoveLeftRight>(player1.get(), true, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_d, std::make_unique<MoveLeftRight>(player1.get(), false, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_e, std::make_unique<ChangeHUD>(player1.get(), true), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_r, std::make_unique<ChangeHUD>(player1.get(), false), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_z, std::make_unique<Shoot>(player1.get()), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_ESCAPE, std::make_unique<ChangeScene>(player1.get(), 0), InputType::Down);
-
-
-	//player 2 controlls
-	ControllerID = 1;
-	inputmanager.AddController(ControllerID);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadUp, std::make_unique<MoveUpDown>(player2.get(), true, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadDown, std::make_unique<MoveUpDown>(player2.get(), false, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadLeft, std::make_unique<MoveLeftRight>(player2.get(), true, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadRight, std::make_unique<MoveLeftRight>(player2.get(), false, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonA, std::make_unique<ChangeHUD>(player2.get(), true), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonB, std::make_unique<ChangeHUD>(player2.get(), false), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonX, std::make_unique<Shoot>(player2.get()), InputType::Down);
-
-	scene.Add(player1);
-	scene.Add(player2);
+	scene.Add(MakePlayer(SceneID, 0, { 300.f,300.f,0.f }));
+	scene.Add(MakePlayer(SceneID, 2, { 400.f,300.f,0.f }));
 }
 
 void LoadPVP()
@@ -307,7 +484,6 @@ void LoadPVP()
 	std::string texturepath;
 	auto& scene = SceneManager::GetInstance().CreateScene("Game : PvP");
 	int SceneID = 3;
-	auto& inputmanager = InputManager::GetInstance();
 
 	///background
 	auto go = std::make_shared<GameObject>();
@@ -329,121 +505,10 @@ void LoadPVP()
 	FPS->AddComponent(new TextComponent("X", font, FPS.get()));
 	scene.Add(FPS);
 
-	/// player1
-	font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 24);
-	auto player1 = std::make_shared<GameObject>();
-	player1->SetLocalPos(glm::vec3{ 300,300,0 });
-	//add sprites
-	auto pSprite0 = std::make_shared<Sprite>();
-	pSprite0->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveRight.png");
-	pSprite0->cols = 1;
-	pSprite0->frames = 2;
-	pSprite0->currentFrame = 0;
-	pSprite0->accumulatedTime = 0.f;
-	pSprite0->frameTime = 0.2f;
-	player1->AddComponent(new SpriteComponent(player1.get(), pSprite0));
+	
+	scene.Add(MakePlayer(SceneID, 0, { 300.f,300.f,0.f }));
 
-	auto pSprite1 = std::make_shared<Sprite>();
-	pSprite1->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveDown.png");
-	pSprite1->cols = 1;
-	pSprite1->frames = 2;
-	pSprite1->currentFrame = 0;
-	pSprite1->accumulatedTime = 0.f;
-	pSprite1->frameTime = 0.2f;
-	player1->GetComponent<SpriteComponent>()->AddSprite(pSprite1);
-
-	auto pSprite2 = std::make_shared<Sprite>();
-	pSprite2->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveLeft.png");
-	pSprite2->cols = 1;
-	pSprite2->frames = 2;
-	pSprite2->currentFrame = 0;
-	pSprite2->accumulatedTime = 0.f;
-	pSprite2->frameTime = 0.2f;
-	player1->GetComponent<SpriteComponent>()->AddSprite(pSprite2);
-
-	auto pSprite3 = std::make_shared<Sprite>();
-	pSprite3->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerMoveUp.png");
-	pSprite3->cols = 1;
-	pSprite3->frames = 2;
-	pSprite3->currentFrame = 0;
-	pSprite3->accumulatedTime = 0.f;
-	pSprite3->frameTime = 0.2f;
-	player1->GetComponent<SpriteComponent>()->AddSprite(pSprite3);
-
-	//score
-	player1->AddComponent(new TextComponent("X", font, player1.get(), glm::vec3{ 0, 60,0 }));
-	//health
-	texturepath = "Sprites/PlayerHealth.png";
-	player1->AddComponent(new HealthComponent{ player1.get(), 4 , texturepath ,100.f });
-	player1->AddObserver(new OnDeath{});
-
-	int ControllerID = 0;
-	float moveSpeed = 60.f;
-	inputmanager.AddController(ControllerID);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadUp, std::make_unique<MoveUpDown>(player1.get(), true, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadDown, std::make_unique<MoveUpDown>(player1.get(), false, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadLeft, std::make_unique<MoveLeftRight>(player1.get(), true, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadRight, std::make_unique<MoveLeftRight>(player1.get(), false, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonA, std::make_unique<ChangeHUD>(player1.get(), true), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonB, std::make_unique<ChangeHUD>(player1.get(), false), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonX, std::make_unique<Shoot>(player1.get()), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::Start, std::make_unique<ChangeScene>(player1.get(), 0), InputType::Down);
-	//Keyboard for P1
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_w, std::make_unique<MoveUpDown>(player1.get(), true, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_s, std::make_unique<MoveUpDown>(player1.get(), false, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_a, std::make_unique<MoveLeftRight>(player1.get(), true, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_d, std::make_unique<MoveLeftRight>(player1.get(), false, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_e, std::make_unique<ChangeHUD>(player1.get(), true), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_r, std::make_unique<ChangeHUD>(player1.get(), false), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_z, std::make_unique<Shoot>(player1.get()), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, SDLK_ESCAPE, std::make_unique<ChangeScene>(player1.get(), 0), InputType::Down);
-	scene.Add(player1);
-
-
-
-
-	/// player2
-	auto player2 = std::make_shared<GameObject>();
-	player2->SetLocalPos(glm::vec3{ 500,300,0 });
-	//add sprites
-	auto pSprite4 = std::make_shared<Sprite>();
-	pSprite4->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/FlygarMoveRight.png");
-	pSprite4->cols = 1;
-	pSprite4->frames = 2;
-	pSprite4->currentFrame = 0;
-	pSprite4->accumulatedTime = 0.f;
-	pSprite4->frameTime = 0.2f;
-	player2->AddComponent(new SpriteComponent(player2.get(), pSprite4));
-	player2->GetComponent<SpriteComponent>()->AddSprite(pSprite4);
-
-	auto pSprite5 = std::make_shared<Sprite>();
-	pSprite5->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/FlygarMoveLeft.png");
-	pSprite5->cols = 1;
-	pSprite5->frames = 2;
-	pSprite5->currentFrame = 0;
-	pSprite5->accumulatedTime = 0.f;
-	pSprite5->frameTime = 0.2f;
-	player2->GetComponent<SpriteComponent>()->AddSprite(pSprite5);
-	player2->GetComponent<SpriteComponent>()->AddSprite(pSprite5);
-
-	//score
-	player2->AddComponent(new TextComponent("X", font, player2.get(), glm::vec3{ 0, 60,0 }));
-	//health
-	texturepath = "Sprites/PlayerHealth.png";
-	player2->AddComponent(new HealthComponent{ player2.get(), 4 , texturepath ,100.f });
-	player2->AddObserver(new OnDeath{});
-
-	ControllerID = 1;
-	inputmanager.AddController(ControllerID);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadUp, std::make_unique<MoveUpDown>(player2.get(), true, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadDown, std::make_unique<MoveUpDown>(player2.get(), false, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadLeft, std::make_unique<MoveLeftRight>(player2.get(), true, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadRight, std::make_unique<MoveLeftRight>(player2.get(), false, moveSpeed), InputType::Pressed);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonA, std::make_unique<ChangeHUD>(player2.get(), true), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonB, std::make_unique<ChangeHUD>(player2.get(), false), InputType::Down);
-	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::ButtonX, std::make_unique<Shoot>(player2.get()), InputType::Down);
-
-	scene.Add(player2);
+	scene.Add(MakeFlygar(SceneID, 1, { 300.f,300.f,0.f } , true));
 }
 
 void load()
@@ -460,6 +525,7 @@ void load()
 
 int main(int, char* [])
 {
+
 	dae::Minigin engine("../Data/");
 	engine.Run(load);
 

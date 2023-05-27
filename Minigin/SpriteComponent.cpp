@@ -5,8 +5,9 @@
 
 using namespace dae;
 
-SpriteComponent::SpriteComponent(GameObject* object, std::shared_ptr<Sprite> sprite)
-	:BaseComponent(object)
+SpriteComponent::SpriteComponent(GameObject* object, std::shared_ptr<Sprite> sprite,float scale)
+	:BaseComponent(object),
+	m_Scale(scale)
 {
 	m_Transform.SetPosition(object->GetWorldPos().x, object->GetWorldPos().y, object->GetWorldPos().z);
 
@@ -36,7 +37,7 @@ void SpriteComponent::Render() const
 	dae::Renderer::GetInstance().RenderSprite(*m_Sprites[m_CurrentAnimation]->texture.get(), pos.x, pos.y,
 		m_Sprites[m_CurrentAnimation]->spriteSize.first * m_Sprites[m_CurrentAnimation]->currentFrame, 
 		m_Sprites[m_CurrentAnimation]->spriteSize.second * 0.f, m_Sprites[m_CurrentAnimation]->spriteSize.first,
-		m_Sprites[m_CurrentAnimation]->spriteSize.second);
+		m_Sprites[m_CurrentAnimation]->spriteSize.second, m_Scale);
 }
 
 void SpriteComponent::AddSprite(std::shared_ptr<Sprite> sprite)

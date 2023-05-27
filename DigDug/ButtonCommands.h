@@ -3,7 +3,8 @@
 #include "Observer.h"
 #include "SpriteComponent.h"
 #include "Command.h"
-#include "events.h"
+#include "GameEvents.h"
+#include "Sounds.h"
 #include "ServiceLocator.h"
 #include "SceneManager.h"
 
@@ -131,7 +132,7 @@ namespace dae
 		void Execute(float) override
 		{
 			auto& soundManager = ServiceLocator::Get_Sound_System();
-			soundManager.PlaySound(0, 5);
+			soundManager.PlaySound(DigDugShoot, 2);
 		};
 	private:
 		GameObject* pGameObject;

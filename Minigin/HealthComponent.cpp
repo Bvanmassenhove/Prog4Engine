@@ -4,6 +4,7 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 
+
 using namespace dae;
 
 HealthComponent::HealthComponent(GameObject* object, int startinghealth, std::string& HealthSpritefilename, float XOffset)

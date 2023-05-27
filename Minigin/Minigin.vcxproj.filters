@@ -23,15 +23,12 @@
     <Filter Include="Engine\Services">
       <UniqueIdentifier>{b63d991c-2303-4115-9ea4-5c7dd44d1237}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Managers">
+      <UniqueIdentifier>{8c4efc07-822d-4584-ac11-c00bed2e67d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Minigin.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneManager.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Singleton.h">
@@ -44,9 +41,6 @@
       <Filter>Engine\GameComponents</Filter>
     </ClInclude>
     <ClInclude Include="TextComponent.h">
-      <Filter>Engine\GameComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="FPSComponent.h">
       <Filter>Engine\GameComponents</Filter>
     </ClInclude>
     <ClInclude Include="RotationComponent.h">
@@ -118,16 +112,24 @@
     <ClInclude Include="SoundSystem.h">
       <Filter>Engine\Services</Filter>
     </ClInclude>
-    <ClInclude Include="HealthComponent.h" />
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Engine\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Engine\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h">
+      <Filter>Engine\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionComponent.h">
+      <Filter>Engine\GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="FPSComponent.h">
+      <Filter>Engine\GameComponents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Minigin.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
@@ -137,9 +139,6 @@
       <Filter>Engine\GameComponents</Filter>
     </ClCompile>
     <ClCompile Include="TextComponent.cpp">
-      <Filter>Engine\GameComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="FPSComponent.cpp">
       <Filter>Engine\GameComponents</Filter>
     </ClCompile>
     <ClCompile Include="RotationComponent.cpp">
@@ -199,6 +198,20 @@
     <ClCompile Include="SoundSystem.cpp">
       <Filter>Engine\Services</Filter>
     </ClCompile>
-    <ClCompile Include="HealthComponent.cpp" />
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Engine\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Engine\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManager.cpp">
+      <Filter>Engine\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionComponent.cpp">
+      <Filter>Engine\GameComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="FPSComponent.cpp">
+      <Filter>Engine\GameComponents</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
