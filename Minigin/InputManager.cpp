@@ -60,18 +60,6 @@ bool dae::InputManager::ProcessInput(float deltaTime)
 				{
 					button.pCommand.get()->Execute(deltaTime);
 				}
-				if (button.button == e.key.keysym.sym)
-				{
-					button.pCommand.get()->Execute(deltaTime);
-				}
-				if (button.button == e.key.keysym.sym)
-				{
-					button.pCommand.get()->Execute(deltaTime);
-				}
-				if (button.button == e.key.keysym.sym)
-				{
-					button.pCommand.get()->Execute(deltaTime);
-				}
 			}
 
 		}
@@ -101,4 +89,10 @@ void dae::InputManager::AddCommand(int SceneID, int ControllerID, Controller::Co
 void dae::InputManager::AddCommand(int SceneID, int ControllerID, SDL_Keycode button, std::unique_ptr<Command> pCommand, InputType type)
 {
 	m_KeyBoardCommandButtons[SceneID].push_back(KeyboardComands{ ControllerID, button, std::move(pCommand), type });
+}
+
+void dae::InputManager::ResetCommandsForScene(int SceneID)
+{
+	m_ControllerCommandButtons[SceneID].clear();
+	m_KeyBoardCommandButtons[SceneID].clear();
 }

@@ -17,6 +17,7 @@ namespace dae
 		Player,
 		Pooka,
 		Flygar,
+		Rock,
 		Level
 	};
 

@@ -19,3 +19,11 @@ std::vector<CollisionComponent*> CollisionManager::GetCollisionComponentsFromSce
 	}
 	return tempVector;
 }
+
+void CollisionManager::ClearCollisionComponentsFromScene(int SceneID)
+{
+	m_CollisionComponents.erase(std::remove_if(m_CollisionComponents.begin(), m_CollisionComponents.end(), [SceneID](const std::pair<CollisionComponent*, int>& pair) 
+		{
+		return pair.second == SceneID;
+		}), m_CollisionComponents.end());
+}

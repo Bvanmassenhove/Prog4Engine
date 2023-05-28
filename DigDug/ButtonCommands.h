@@ -7,9 +7,19 @@
 #include "Sounds.h"
 #include "ServiceLocator.h"
 #include "SceneManager.h"
+#include "InputManager.h"
+#include "LevelSelecter.h"
 
 namespace dae
 {
+	enum MoveDirection
+	{
+		MoveUp,
+		MoveDown,
+		MoveLeft,
+		MoveRight
+	};
+
 	class ChangeScene : public Command
 	{
 	public:
@@ -20,80 +30,125 @@ namespace dae
 		void Execute(float) override
 		{
 			auto& sceneManager = SceneManager::GetInstance();
-			sceneManager.LoadScene(toLoadScene);		
+			auto& loadedScene = sceneManager.LoadScene(toLoadScene);
+
+			auto& levelSelector = LevelSelecter::GetInstance();
+
+			switch (toLoadScene)
+			{
+			case 0:
+
+				levelSelector.LoadMainMenu(loadedScene);
+				break;
+			case 1:
+
+				levelSelector.LoadSingePlayer(1, loadedScene);
+				break;
+			case 2:
+
+				levelSelector.LoadCoop(4, loadedScene);
+				break;
+			case 3:
+
+				levelSelector.LoadPVP(5, loadedScene);
+				break;
+			default:
+				break;
+			}
 		};
 	private:
 		GameObject* pGameObject;
 		int toLoadScene = 0;
 	};
 
-	class MoveUpDown : public Command
+	class ChangeLevel : public Command
 	{
 	public:
-		MoveUpDown(GameObject* gameObject, bool moveUp,float moveSpeed)
-			: pGameObject(gameObject),
-			moveUp(moveUp),
-			moveSpeed(moveSpeed)
+		ChangeLevel(GameObject* gameObject)
+			: pGameObject(gameObject)
 		{};
-		void Execute(float deltaTime) override
-		{ 
-			glm::vec3 pos = pGameObject->GetLocalPos();
-			if (moveUp)
+		void Execute(float) override
+		{
+			// increment current level (get the curent loaded level and do ++)
+			// have the number of levels in the scene via the scene maneger
+			// if current scene == nrOfLevels load main menu
+
+			auto& sceneManager = SceneManager::GetInstance();
+			int SceneID = sceneManager.GetSceneID();
+			auto& loadedScene = sceneManager.LoadScene(SceneID);
+
+			auto& levelSelector = LevelSelecter::GetInstance();
+			int loadedID =  levelSelector.GetLoadedLevel();
+
+			//dumb solution
+			if (loadedID == 1 || loadedID == 2)
 			{
-				pGameObject->SetLocalPos(glm::vec3{ pos.x, pos.y - moveSpeed * deltaTime, pos.z });
-				if (pGameObject->GetComponent<SpriteComponent>() != nullptr)
-				{
-					pGameObject->GetComponent<SpriteComponent>()->SetCurrentAnimation(Animation::moveUp);
-				}
+				levelSelector.SetLoadedLevel(++loadedID);
+				levelSelector.LoadSingePlayer(loadedID, loadedScene);
 			}
-			else
+			else if (loadedID == 3 || loadedID == 4 || loadedID == 5)
 			{
-				pGameObject->SetLocalPos(glm::vec3{ pos.x, pos.y + moveSpeed * deltaTime, pos.z });
-				if (pGameObject->GetComponent<SpriteComponent>() != nullptr)
-				{
-					pGameObject->GetComponent<SpriteComponent>()->SetCurrentAnimation(Animation::moveDown);
-				}
+				// if ending final level in scene reset and go to main menu
+				levelSelector.SetLoadedLevel(0);
+				sceneManager.LoadScene(0);
 			}
+
+			
 		};
 	private:
 		GameObject* pGameObject;
-		bool moveUp;
-		float moveSpeed;
+		int toLoadLevel = 0;
 	};
 
-	class MoveLeftRight : public Command
+	class Move : public Command
 	{
 	public:
-		MoveLeftRight(GameObject* gameObject, bool moveLeft, float moveSpeed)
+		Move(GameObject* gameObject, MoveDirection moveDirection, float moveSpeed)
 			: pGameObject(gameObject),
-			moveLeft(moveLeft),
+			moveDirection(moveDirection),
 			moveSpeed(moveSpeed)
 		{};
 		void Execute(float deltaTime) override
 		{
 			glm::vec3 pos = pGameObject->GetLocalPos();
-			if (moveLeft)
+			switch (moveDirection)
 			{
+			case MoveUp:
+				pGameObject->SetLocalPos(glm::vec3{ pos.x, pos.y - moveSpeed * deltaTime, pos.z });
+				if (pGameObject->GetComponent<SpriteComponent>() != nullptr)
+				{
+					pGameObject->GetComponent<SpriteComponent>()->SetCurrentAnimation(Animation::moveUp);
+				}
+				break;
+			case MoveDown:
+				pGameObject->SetLocalPos(glm::vec3{ pos.x, pos.y + moveSpeed * deltaTime, pos.z });
+				if (pGameObject->GetComponent<SpriteComponent>() != nullptr)
+				{
+					pGameObject->GetComponent<SpriteComponent>()->SetCurrentAnimation(Animation::moveDown);
+				}
+				break;
+			case MoveLeft:
 				pGameObject->SetLocalPos(glm::vec3{ pos.x - moveSpeed * deltaTime, pos.y, pos.z });
 
 				if (pGameObject->GetComponent<SpriteComponent>() != nullptr)
 				{
 					pGameObject->GetComponent<SpriteComponent>()->SetCurrentAnimation(Animation::moveLeft);
 				}
-			}
-			else
-			{
+				break;
+			case MoveRight:
 				pGameObject->SetLocalPos(glm::vec3{ pos.x + moveSpeed * deltaTime, pos.y, pos.z });
 				if (pGameObject->GetComponent<SpriteComponent>() != nullptr)
 				{
 					pGameObject->GetComponent<SpriteComponent>()->SetCurrentAnimation(Animation::moveRight);
 				}
+				break;
+			default:
+				break;
 			}
-			
 		};
 	private:
 		GameObject* pGameObject;
-		bool moveLeft;
+		MoveDirection moveDirection;
 		float moveSpeed;
 	};
 

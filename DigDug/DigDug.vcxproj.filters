@@ -33,6 +33,12 @@
     <ClCompile Include="TileComponent.cpp">
       <Filter>Source Files\CustomComponents</Filter>
     </ClCompile>
+    <ClCompile Include="RockComponent.cpp">
+      <Filter>Source Files\CustomComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelSelecter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Achievement.h">
@@ -58,6 +64,12 @@
     </ClInclude>
     <ClInclude Include="TileComponent.h">
       <Filter>Source Files\CustomComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="RockComponent.h">
+      <Filter>Source Files\CustomComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelSelecter.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

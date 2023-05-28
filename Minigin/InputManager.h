@@ -50,6 +50,7 @@ namespace dae
 		void SetTotalScenes(int NrScene);
 		void AddCommand(int SceneID, int ControllerID, Controller::ControllerButton button, std::unique_ptr<Command> pCommand, InputType type);
 		void AddCommand(int SceneID, int ControllerID, SDL_Keycode button, std::unique_ptr<Command> pCommand, InputType type);
+		void ResetCommandsForScene(int SceneID);
 	};
 
 }

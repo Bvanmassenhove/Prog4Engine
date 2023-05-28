@@ -14,7 +14,7 @@ namespace dae
 
 		void Update(float deltaTime);
 		void Render();
-		void LoadScene(int SceneID) { m_LoadedSceneID = SceneID; };
+		Scene& LoadScene(int SceneID) { m_LoadedSceneID = SceneID; return *m_scenes[SceneID]; };
 		int GetSceneID() { return m_LoadedSceneID; };
 
 	private:

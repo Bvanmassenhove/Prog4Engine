@@ -164,6 +164,8 @@
     <ClCompile Include="..\Minigin\HealthComponent.cpp" />
     <ClCompile Include="..\Minigin\PlayerComponent.cpp" />
     <ClCompile Include="DigDug.cpp" />
+    <ClCompile Include="LevelSelecter.cpp" />
+    <ClCompile Include="RockComponent.cpp" />
     <ClCompile Include="TileComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -172,7 +174,9 @@
     <ClInclude Include="Achievement.h" />
     <ClInclude Include="ButtonCommands.h" />
     <ClInclude Include="GameEvents.h" />
+    <ClInclude Include="LevelSelecter.h" />
     <ClInclude Include="OnDeath.h" />
+    <ClInclude Include="RockComponent.h" />
     <ClInclude Include="Sounds.h" />
     <ClInclude Include="TileComponent.h" />
   </ItemGroup>

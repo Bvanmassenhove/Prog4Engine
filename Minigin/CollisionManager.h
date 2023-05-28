@@ -11,13 +11,12 @@ namespace dae
 	public:
 		void AddCollisionComponent(CollisionComponent* CollisionComponent , int SceneID);
 		std::vector<CollisionComponent*> GetCollisionComponentsFromScene(int SceneID);
+		void ClearCollisionComponentsFromScene(int SceneID);
 
 	private:
 		friend class Singleton<CollisionManager>;
 		CollisionManager() = default;
 
-		
-		
 		std::vector<std::pair<CollisionComponent*,int>> m_CollisionComponents;
 	};
 }
