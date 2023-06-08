@@ -2,6 +2,7 @@
 enum Event
 {
 	PlayerDied,
-	EnemyDied,
+	PookaDied,
+	FlygarDied,
 	ACHWinGame
 };

@@ -14,7 +14,7 @@ CollisionComponent::CollisionComponent(GameObject* object,rectf collisionRect , 
 
 void CollisionComponent::Update(float)
 {
-	if (m_CollisionFlag != CollisionFlag::Off && m_CollisionFlag != CollisionFlag::Level)
+	if (m_CollisionFlag != CollisionFlag::Off && m_CollisionFlag != CollisionFlag::Level && m_CollisionFlag != CollisionFlag::Arrow)
 	{
 		m_CollisionRect.bottom = GetOwner()->GetWorldPos().y ;
 		m_CollisionRect.left = GetOwner()->GetWorldPos().x + 2;

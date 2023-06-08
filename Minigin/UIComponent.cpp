@@ -1,4 +1,4 @@
-#include "HealthComponent.h"
+#include "UIComponent.h"
 #include "TextComponent.h"
 #include <sstream>
 #include "ResourceManager.h"
@@ -7,7 +7,7 @@
 
 using namespace dae;
 
-HealthComponent::HealthComponent(GameObject* object, int startinghealth, std::string& HealthSpritefilename, float XOffset)
+UIComponent::UIComponent(GameObject* object, int startinghealth, std::string& HealthSpritefilename, float XOffset)
 	:BaseComponent(object),
 	m_StartingHealth(startinghealth),
 	m_Health(startinghealth),
@@ -18,16 +18,16 @@ HealthComponent::HealthComponent(GameObject* object, int startinghealth, std::st
 		m_HealthTexture = ResourceManager::GetInstance().LoadTexture(HealthSpritefilename);
 	}
 }
-void HealthComponent::Update(float) 
+void UIComponent::Update(float) 
 {
 	const GameObject* owner = BaseComponent::GetOwner();
 
 	std::stringstream ss;
-	ss << "Health: " << m_Health << " Score: " << m_Score;
+	ss <<  " Score: " << m_Score;
 
 	owner->GetComponent<TextComponent>()->SetText(ss.str());
 }
-void HealthComponent::Render() const 
+void UIComponent::Render() const 
 {
 	if (m_HealthTexture != nullptr)
 	{
@@ -38,11 +38,11 @@ void HealthComponent::Render() const
 	}
 }
 
-void HealthComponent::UpdateHealth(int healthchange)
+void UIComponent::UpdateHealth(int healthchange)
 {
 	m_Health += healthchange;
 }
-void HealthComponent::UpdateScore(int ScoreChange)
+void UIComponent::UpdateScore(int ScoreChange)
 {
 	m_Score += ScoreChange;
 }

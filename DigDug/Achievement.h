@@ -19,9 +19,9 @@ namespace dae
 			{
 			case ACHWinGame:
 
-				if(gameObject->GetComponent<HealthComponent>() != nullptr)
+				if(gameObject->GetComponent<UIComponent>() != nullptr)
 				{
-					if (gameObject->GetComponent<HealthComponent>()->GetScore() >= 50 && ACH_WIN_ONE_GAME == false)
+					if (gameObject->GetComponent<UIComponent>()->GetScore() >= 50 && ACH_WIN_ONE_GAME == false)
 					{
 						//SteamUserStats()->SetAchievement("ACH_WIN_ONE_GAME");
 						ACH_WIN_ONE_GAME = true;

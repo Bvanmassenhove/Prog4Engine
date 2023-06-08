@@ -13,6 +13,7 @@ namespace dae
 		moveDown = 1,
 		moveLeft = 2,
 		moveUp = 3,
+		dying = 4, 
 	};
 
 	struct Sprite
@@ -41,6 +42,7 @@ namespace dae
 		void AddSprite(std::shared_ptr<Sprite> sprite);
 		void SetTransform(float x, float y, float z);
 		void SetCurrentAnimation(Animation animation) { m_CurrentAnimation = animation; }
+		void NextFrame();
 
 	private:
 		//std::vector<Sprite*> m_Sprites;

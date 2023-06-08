@@ -1,6 +1,6 @@
 #pragma once
 #include "Observer.h"
-#include "HealthComponent.h"
+#include "UIComponent.h"
 #include "GameEvents.h"
 
 namespace dae
@@ -16,7 +16,7 @@ namespace dae
 
 		void Notify(int event, GameObject* gameObject)
 		{
-			auto HealthComp = gameObject->GetComponent<HealthComponent>();
+			auto HealthComp = gameObject->GetComponent<UIComponent>();
 			switch (event)
 			{
 			case PlayerDied:
@@ -27,8 +27,11 @@ namespace dae
 					//trigger game over
 				}
 				break;
-			case EnemyDied:
-				HealthComp->UpdateScore(+1);
+			case PookaDied:
+				HealthComp->UpdateScore(+200);
+				break;
+			case FlygarDied:
+				HealthComp->UpdateScore(+400);
 				break;
 			default:
 				break;

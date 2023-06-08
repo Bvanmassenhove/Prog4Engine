@@ -111,35 +111,59 @@ namespace dae
 		void Execute(float deltaTime) override
 		{
 			glm::vec3 pos = pGameObject->GetLocalPos();
+			if(pGameObject->GetComponent<ShootComponent>()->GetShooting() || pGameObject->GetComponent<ShootComponent>()->GetHit())
+			{
+				return;
+			}
+
+			auto spriteComponent = pGameObject->GetComponent<SpriteComponent>();
+			auto shootComponent = pGameObject->GetComponent<ShootComponent>();
 			switch (moveDirection)
 			{
 			case MoveUp:
 				pGameObject->SetLocalPos(glm::vec3{ pos.x, pos.y - moveSpeed * deltaTime, pos.z });
-				if (pGameObject->GetComponent<SpriteComponent>() != nullptr)
+				if (spriteComponent != nullptr)
 				{
-					pGameObject->GetComponent<SpriteComponent>()->SetCurrentAnimation(Animation::moveUp);
+					spriteComponent->SetCurrentAnimation(Animation::moveUp);
+					
+				}
+				if (shootComponent != nullptr)
+				{
+					shootComponent->SetDirection(up);
 				}
 				break;
 			case MoveDown:
 				pGameObject->SetLocalPos(glm::vec3{ pos.x, pos.y + moveSpeed * deltaTime, pos.z });
-				if (pGameObject->GetComponent<SpriteComponent>() != nullptr)
+				if (spriteComponent != nullptr)
 				{
-					pGameObject->GetComponent<SpriteComponent>()->SetCurrentAnimation(Animation::moveDown);
+					spriteComponent->SetCurrentAnimation(Animation::moveDown);
+				}
+				if (shootComponent != nullptr)
+				{
+					shootComponent->SetDirection(down);
 				}
 				break;
 			case MoveLeft:
 				pGameObject->SetLocalPos(glm::vec3{ pos.x - moveSpeed * deltaTime, pos.y, pos.z });
 
-				if (pGameObject->GetComponent<SpriteComponent>() != nullptr)
+				if (spriteComponent != nullptr)
 				{
-					pGameObject->GetComponent<SpriteComponent>()->SetCurrentAnimation(Animation::moveLeft);
+					spriteComponent->SetCurrentAnimation(Animation::moveLeft);
+				}
+				if (shootComponent != nullptr)
+				{
+					shootComponent->SetDirection(left);
 				}
 				break;
 			case MoveRight:
 				pGameObject->SetLocalPos(glm::vec3{ pos.x + moveSpeed * deltaTime, pos.y, pos.z });
-				if (pGameObject->GetComponent<SpriteComponent>() != nullptr)
+				if (spriteComponent != nullptr)
 				{
-					pGameObject->GetComponent<SpriteComponent>()->SetCurrentAnimation(Animation::moveRight);
+					spriteComponent->SetCurrentAnimation(Animation::moveRight);
+				}
+				if (shootComponent != nullptr)
+				{
+					shootComponent->SetDirection(right);
 				}
 				break;
 			default:
@@ -168,7 +192,7 @@ namespace dae
 			}
 			else
 			{
-				pGameObject->NotifyObservers(Event::EnemyDied);
+				pGameObject->NotifyObservers(Event::PookaDied);
 				pGameObject->NotifyObservers(Event::ACHWinGame);
 			}
 			
@@ -186,10 +210,45 @@ namespace dae
 		{};
 		void Execute(float) override
 		{
-			auto& soundManager = ServiceLocator::Get_Sound_System();
-			soundManager.PlaySound(DigDugShoot, 2);
+			auto shootcomponent = pGameObject->GetComponent<ShootComponent>();
+			if (shootcomponent != nullptr && shootcomponent->GetHit() != nullptr)
+			{	
+				if(NrPumps == 3)
+				{
+					if (shootcomponent->GetHit()->GetComponent<CollisionComponent>(1)->GetCollisionFlag() == Pooka)
+					{
+						pGameObject->NotifyObservers(Event::PookaDied);
+					}
+					else if (shootcomponent->GetHit()->GetComponent<CollisionComponent>(1)->GetCollisionFlag() == Flygar)
+					{
+						pGameObject->NotifyObservers(Event::FlygarDied);
+					}
+
+					auto& sceneManager = SceneManager::GetInstance();
+					int SceneID = sceneManager.GetSceneID();
+					auto& loadedScene = sceneManager.LoadScene(SceneID);
+					loadedScene.Remove(shootcomponent->GetHit());
+					shootcomponent->Reset();
+					NrPumps = 0;
+				}
+				else
+				{
+					shootcomponent->GetHit()->GetComponent<SpriteComponent>()->NextFrame();
+					NrPumps++;
+				}
+			}
+			else
+			{
+				auto& soundManager = ServiceLocator::Get_Sound_System();
+				soundManager.PlaySound(DigDugShoot, 2);
+				if (shootcomponent != nullptr)
+				{
+					shootcomponent->Shoot();
+				}
+			}
 		};
 	private:
 		GameObject* pGameObject;
+		int NrPumps{ 0 };
 	};
 }

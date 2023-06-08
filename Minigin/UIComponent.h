@@ -4,15 +4,15 @@
 
 namespace dae
 {
-	class HealthComponent final : public BaseComponent
+	class UIComponent final : public BaseComponent
 	{
 	public:
-		HealthComponent(GameObject* object,int startinghealth, std::string& HealthSpritefilename , float XOffset);
-		virtual ~HealthComponent() = default;
-		HealthComponent(const HealthComponent& other) = delete;
-		HealthComponent(HealthComponent&& other) = delete;
-		HealthComponent& operator=(const HealthComponent& other) = delete;
-		HealthComponent& operator=(HealthComponent&& other) = delete;
+		UIComponent(GameObject* object,int startinghealth, std::string& HealthSpritefilename , float XOffset);
+		virtual ~UIComponent() = default;
+		UIComponent(const UIComponent& other) = delete;
+		UIComponent(UIComponent&& other) = delete;
+		UIComponent& operator=(const UIComponent& other) = delete;
+		UIComponent& operator=(UIComponent&& other) = delete;
 
 
 		void Update(float deltatime) override;

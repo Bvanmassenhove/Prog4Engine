@@ -161,17 +161,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Minigin\HealthComponent.cpp" />
+    <ClCompile Include="..\Minigin\UIComponent.cpp" />
     <ClCompile Include="..\Minigin\PlayerComponent.cpp" />
+    <ClCompile Include="FlygarComponent.cpp" />
+    <ClCompile Include="PookaComponent.cpp" />
+    <ClCompile Include="ShootComponent.cpp" />
     <ClCompile Include="DigDug.cpp" />
     <ClCompile Include="LevelSelecter.cpp" />
     <ClCompile Include="RockComponent.cpp" />
     <ClCompile Include="TileComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Minigin\HealthComponent.h" />
+    <ClInclude Include="..\Minigin\UIComponent.h" />
     <ClInclude Include="..\Minigin\PlayerComponent.h" />
     <ClInclude Include="Achievement.h" />
+    <ClInclude Include="FlygarComponent.h" />
+    <ClInclude Include="PookaComponent.h" />
+    <ClInclude Include="ShootComponent.h" />
     <ClInclude Include="ButtonCommands.h" />
     <ClInclude Include="GameEvents.h" />
     <ClInclude Include="LevelSelecter.h" />

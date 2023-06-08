@@ -14,12 +14,15 @@
 #include "TextComponent.h"
 #include "FPSComponent.h"
 #include "RotationComponent.h"
-#include "HealthComponent.h"
+#include "UIComponent.h"
 #include "SpriteComponent.h"
 #include "PlayerComponent.h"
 #include "CollisionComponent.h"
 #include "TileComponent.h"
 #include "RockComponent.h"
+#include "ShootComponent.h"
+#include "PookaComponent.h"
+#include "FlygarComponent.h"
 
 #include "buttonCommands.h"
 
@@ -77,20 +80,43 @@ std::shared_ptr<GameObject> LevelSelecter::MakePlayer(int SceneID, int Controlle
 	pSprite3->frameTime = 0.2f;
 	player->GetComponent<SpriteComponent>()->AddSprite(pSprite3);
 
+	auto pSprite4 = std::make_shared<Sprite>();
+	pSprite4->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PlayerDying.png");
+	pSprite4->cols = 1;
+	pSprite4->frames = 4;
+	pSprite4->currentFrame = 0;
+	pSprite4->accumulatedTime = 0.f;
+	pSprite4->frameTime = 0.2f;
+	player->GetComponent<SpriteComponent>()->AddSprite(pSprite4);
+
+
 	//score
-	player->AddComponent(new TextComponent("X", font, player.get(), glm::vec3{ 0, 60,0 }));
+	player->AddComponent(new TextComponent("X", font, player.get(), glm::vec3{ 0 + 400.f * ControllerID, 60,0 }));
 	//health
 	std::string texturepath = "Sprites/PlayerHealth.png";
-	player->AddComponent(new HealthComponent{ player.get(), 4 , texturepath ,100.f });
+	player->AddComponent(new UIComponent{ player.get(), 4 , texturepath ,100.f + 300.f * ControllerID });
 	player->AddObserver(new OnDeath{});
 
-
+	//hitbox
 	float size = 28; // 32 - 4 to make the sprite 28/28
 
 	rectf playerRect{ player->GetWorldPos().x + 2,player->GetWorldPos().y - 2 , size , size };
 	player->AddComponent(new CollisionComponent{ player.get() ,playerRect , Player, true });
-	collisionManager.AddCollisionComponent(player->GetComponent<CollisionComponent>(), SceneID);
+	collisionManager.AddCollisionComponent(player->GetComponent<CollisionComponent>(1), SceneID);
 	player->AddComponent(new PlayerComponent{ player.get(),location });
+
+
+
+	//attack
+	std::string shootRightPath = "Sprites/ShootRight.png";
+	std::string shootLeftPath = "Sprites/ShootLeft.png";
+	std::string shootUpPath = "Sprites/ShootUp.png";
+	std::string shootDownPath = "Sprites/ShootDown.png";
+	player->AddComponent(new CollisionComponent{ player.get() ,rectf{0.f,0.f,0.f,0.f} , Arrow, true });
+	collisionManager.AddCollisionComponent(player->GetComponent<CollisionComponent>(2), SceneID);
+	player->AddComponent(new ShootComponent(player.get(), shootRightPath, shootLeftPath, shootUpPath, shootDownPath, 8.f, 128.f, 300.f,16.f));
+
+	//controls
 
 	float moveSpeed = 60.f;
 	inputmanager.AddCommand(SceneID, ControllerID, Controller::ControllerButton::DpadUp, std::make_unique<Move>(player.get(), MoveUp, moveSpeed), InputType::Pressed);
@@ -147,21 +173,40 @@ std::shared_ptr<GameObject> LevelSelecter::MakeFlygar(int SceneID, int Controlle
 	flygar->GetComponent<SpriteComponent>()->AddSprite(pSprite1);
 	flygar->GetComponent<SpriteComponent>()->AddSprite(pSprite1);
 
+	auto pSprite3 = std::make_shared<Sprite>();
+	pSprite3->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/FlygarDying.png");
+	pSprite3->cols = 1;
+	pSprite3->frames = 4;
+	pSprite3->currentFrame = 0;
+	pSprite3->accumulatedTime = 0.f;
+	pSprite3->frameTime = 0.2f;
+	flygar->GetComponent<SpriteComponent>()->AddSprite(pSprite3);
+
 
 	float size = 28; // 32 - 4 to make the sprite 28/28
 
 	rectf flygarRect{ flygar->GetWorldPos().x + 2,flygar->GetWorldPos().y - 2,size,size };
 	flygar->AddComponent(new CollisionComponent{ flygar.get() ,flygarRect , Flygar, true });
-	collisionManager.AddCollisionComponent(flygar->GetComponent<CollisionComponent>(), SceneID);
-	flygar->AddComponent(new PlayerComponent{ flygar.get(),location });
+	collisionManager.AddCollisionComponent(flygar->GetComponent<CollisionComponent>(1), SceneID);
+	flygar->AddComponent(new FlygarComponent{ flygar.get() });
+
+
+	//attack
+	std::string shootRightPath = "Sprites/FlameRight.png";
+	std::string shootLeftPath = "Sprites/FlameLeft.png";
+	std::string shootUpPath = "Sprites/FlameUp.png";
+	std::string shootDownPath = "Sprites/FlameDown.png";
+	flygar->AddComponent(new CollisionComponent{ flygar.get() ,rectf{0.f,0.f,0.f,0.f} , Flame, true });
+	collisionManager.AddCollisionComponent(flygar->GetComponent<CollisionComponent>(2), SceneID);
+	flygar->AddComponent(new ShootComponent(flygar.get(), shootRightPath, shootLeftPath, shootUpPath, shootDownPath, 16.f, 128.f, 300.f,8.f));
 
 	if (player)
 	{
 		//score
-		flygar->AddComponent(new TextComponent("X", font, flygar.get(), glm::vec3{ 0, 60,0 }));
+		flygar->AddComponent(new TextComponent("X", font, flygar.get(), glm::vec3{ 0 + 400.f * ControllerID, 60,0 }));
 		//health
-		std::string texturepath = "Sprites/PlayerHealth.png";
-		flygar->AddComponent(new HealthComponent{ flygar.get(), 4 , texturepath ,100.f });
+		std::string texturepath = "Sprites/FlygarHealth.png";
+		flygar->AddComponent(new UIComponent{ flygar.get(), 4 , texturepath ,100.f + 300.f * ControllerID });
 		flygar->AddObserver(new OnDeath{});
 
 
@@ -207,11 +252,22 @@ std::shared_ptr<GameObject> LevelSelecter::MakePooka(int SceneID, glm::vec3 loca
 	pooka->GetComponent<SpriteComponent>()->AddSprite(pSprite5);
 	pooka->GetComponent<SpriteComponent>()->AddSprite(pSprite5);
 
+	auto pSprite6 = std::make_shared<Sprite>();
+	pSprite6->texture = dae::ResourceManager::GetInstance().LoadTexture("Sprites/PookaDying.png");
+	pSprite6->cols = 1;
+	pSprite6->frames = 4;
+	pSprite6->currentFrame = 0;
+	pSprite6->accumulatedTime = 0.f;
+	pSprite6->frameTime = 0.2f;
+	pooka->GetComponent<SpriteComponent>()->AddSprite(pSprite6);
+
 	float size = 28; // 32 - 4 to make the sprite 28/28
 
 	rectf pookaRect{ pooka->GetWorldPos().x + 2,pooka->GetWorldPos().y - 2,size,size };
 	pooka->AddComponent(new CollisionComponent{ pooka.get() ,pookaRect , Pooka, true });
 	collisionManager.AddCollisionComponent(pooka->GetComponent<CollisionComponent>(), SceneID);
+	pooka->AddComponent(new PookaComponent{ pooka.get() });
+
 
 	return pooka;
 }
@@ -243,7 +299,7 @@ std::shared_ptr<GameObject> LevelSelecter::MakeTile(int SceneID, glm::vec3 locat
 	float size = 28; // 32 - 4 to make the sprite 28/28
 
 	rectf tileRect{ tile->GetWorldPos().x + 2,tile->GetWorldPos().y - 2,size,size };
-	tile->AddComponent(new CollisionComponent{ tile.get() ,tileRect , Level, false });
+	tile->AddComponent(new CollisionComponent{ tile.get() ,tileRect , Level, true });
 	collisionManager.AddCollisionComponent(tile->GetComponent<CollisionComponent>(), SceneID);
 
 	tile->AddComponent(new TileComponent(tile.get(), tileFile));

@@ -23,11 +23,14 @@ void SpriteComponent::Update(float deltatime)
 	const auto owner = BaseComponent::GetOwner();
 	m_Transform.SetPosition(owner->GetWorldPos().x, owner->GetWorldPos().y, owner->GetWorldPos().z);
 
-	m_Sprites[m_CurrentAnimation]->accumulatedTime += deltatime;
-	if (m_Sprites[m_CurrentAnimation]->accumulatedTime > m_Sprites[m_CurrentAnimation]->frameTime)
+	if (m_CurrentAnimation != dying)
 	{
-		++m_Sprites[m_CurrentAnimation]->currentFrame %= m_Sprites[m_CurrentAnimation]->frames;
-		m_Sprites[m_CurrentAnimation]->accumulatedTime -= m_Sprites[m_CurrentAnimation]->frameTime;
+		m_Sprites[m_CurrentAnimation]->accumulatedTime += deltatime;
+		if (m_Sprites[m_CurrentAnimation]->accumulatedTime > m_Sprites[m_CurrentAnimation]->frameTime)
+		{
+			++m_Sprites[m_CurrentAnimation]->currentFrame %= m_Sprites[m_CurrentAnimation]->frames;
+			m_Sprites[m_CurrentAnimation]->accumulatedTime -= m_Sprites[m_CurrentAnimation]->frameTime;
+		}
 	}
 }
 
@@ -50,3 +53,9 @@ void SpriteComponent::SetTransform(float x, float y, float z)
 {
 	m_Transform.SetPosition(x, y, z);
 }
+
+void SpriteComponent::NextFrame() 
+{
+	++m_Sprites[m_CurrentAnimation]->currentFrame %= m_Sprites[m_CurrentAnimation]->frames;
+	m_Sprites[m_CurrentAnimation]->accumulatedTime -= m_Sprites[m_CurrentAnimation]->frameTime;
+};

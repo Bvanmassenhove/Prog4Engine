@@ -2,7 +2,6 @@
 #include "GameObject.h"
 #include "CollisionManager.h"
 
-
 namespace dae
 {
 	class PlayerComponent final : public BaseComponent
@@ -18,6 +17,8 @@ namespace dae
 
 		void Update(float deltatime) override;
 		void Render() const override;
+
+		
 	private:
 		CollisionComponent* m_pCollisionComponent;
 		glm::vec3 m_Spawn;

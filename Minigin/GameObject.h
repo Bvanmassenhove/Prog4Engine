@@ -6,6 +6,8 @@
 #include "Observer.h"
 #include <string>
 
+
+
 namespace dae
 {
 	class Texture2D;
@@ -21,10 +23,14 @@ namespace dae
 
 		void Update(float deltatime);
 		void Render();
+
+		
+
 		void AddComponent(BaseComponent* component)
 		{
 			m_Components.push_back(component);
 		}
+
 		template <typename T> T* GetComponent() const
 		{
 			for (BaseComponent* component : m_Components)
@@ -34,6 +40,28 @@ namespace dae
 			}
 			return nullptr;
 		}
+
+		template <typename T> T* GetComponent(int compNr) const
+		{
+			int nr = 1;
+			for (BaseComponent* component : m_Components)
+			{
+				if (dynamic_cast<T*>(component))
+				{
+					if (compNr == nr)
+					{
+						return (T*)component;
+					}
+					else
+					{
+					nr++;
+					}
+				}
+				
+			}
+			return nullptr;
+		}
+
 		template <typename T> bool RemoveComponent(T* ToRemoveComponent)
 		{
 
@@ -95,6 +123,7 @@ namespace dae
 		glm::vec3 m_WorldTransform;
 		glm::vec3 m_LocalTransform;
 		bool m_positionIsDirty{ true };
+
 
 		void RemoveChild(GameObject* pChild) { m_pchilderen.erase(std::remove(m_pchilderen.begin(), m_pchilderen.end(), pChild), m_pchilderen.end()); }
 		void AddChild(GameObject* pChild) { m_pchilderen.push_back(pChild); }

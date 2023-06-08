@@ -18,7 +18,9 @@ namespace dae
 		Pooka,
 		Flygar,
 		Rock,
-		Level
+		Level,
+		Arrow,
+		Flame
 	};
 
 	class CollisionComponent final : public BaseComponent
@@ -39,7 +41,9 @@ namespace dae
 		void SetCollisionFlag(CollisionFlag flag) { m_CollisionFlag = flag; }
 		CollisionFlag GetCollisionFlag() const { return m_CollisionFlag; }
 		rectf GetCollisionRect() const { return m_CollisionRect; }
+		void SetCollisionRect(rectf newRect) { m_CollisionRect = newRect; }
 
+		GameObject* GetComponentOwner() { return GetOwner(); }
 
 	private:
 		rectf m_CollisionRect;

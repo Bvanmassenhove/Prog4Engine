@@ -10,6 +10,7 @@ namespace dae
 	public:
 		void Add(std::shared_ptr<GameObject> object);
 		void Remove(std::shared_ptr<GameObject> object);
+		void Remove(GameObject* object);
 		void RemoveAll();
 		
 

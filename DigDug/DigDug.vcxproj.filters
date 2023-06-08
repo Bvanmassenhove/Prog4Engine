@@ -27,7 +27,7 @@
     <ClCompile Include="..\Minigin\PlayerComponent.cpp">
       <Filter>Source Files\CustomComponents</Filter>
     </ClCompile>
-    <ClCompile Include="..\Minigin\HealthComponent.cpp">
+    <ClCompile Include="..\Minigin\UIComponent.cpp">
       <Filter>Source Files\CustomComponents</Filter>
     </ClCompile>
     <ClCompile Include="TileComponent.cpp">
@@ -38,6 +38,15 @@
     </ClCompile>
     <ClCompile Include="LevelSelecter.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShootComponent.cpp">
+      <Filter>Source Files\CustomComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="PookaComponent.cpp">
+      <Filter>Source Files\CustomComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="FlygarComponent.cpp">
+      <Filter>Source Files\CustomComponents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -53,7 +62,7 @@
     <ClInclude Include="..\Minigin\PlayerComponent.h">
       <Filter>Source Files\CustomComponents</Filter>
     </ClInclude>
-    <ClInclude Include="..\Minigin\HealthComponent.h">
+    <ClInclude Include="..\Minigin\UIComponent.h">
       <Filter>Source Files\CustomComponents</Filter>
     </ClInclude>
     <ClInclude Include="GameEvents.h">
@@ -70,6 +79,15 @@
     </ClInclude>
     <ClInclude Include="LevelSelecter.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootComponent.h">
+      <Filter>Source Files\CustomComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="PookaComponent.h">
+      <Filter>Source Files\CustomComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="FlygarComponent.h">
+      <Filter>Source Files\CustomComponents</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

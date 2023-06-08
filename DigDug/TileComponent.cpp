@@ -29,7 +29,7 @@ void TileComponent::Update(float)
 
 	for (const auto& collisionComponent : CollisionManager::GetInstance().GetCollisionComponentsFromScene(sceneId))
 	{
-		if (collisionComponent->GetCollisionFlag() == Player && collisionComponent->IsOverlap(m_pCollisionComponent->GetCollisionRect()))
+		if (collisionComponent->GetCollisionFlag() == Player && collisionComponent->IsOverlap(m_pCollisionComponent->GetCollisionRect()) || collisionComponent->GetCollisionFlag() == Flygar && collisionComponent->IsOverlap(m_pCollisionComponent->GetCollisionRect()))
 		{
 			//GetOwner()->~GameObject();
 			m_pCollisionComponent->SetCollisionFlag(Off);
