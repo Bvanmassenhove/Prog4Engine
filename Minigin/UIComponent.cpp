@@ -7,10 +7,11 @@
 
 using namespace dae;
 
-UIComponent::UIComponent(GameObject* object, int startinghealth, std::string& HealthSpritefilename, float XOffset)
+UIComponent::UIComponent(GameObject* object, int startinghealth, int startingScore, std::string& HealthSpritefilename, float XOffset)
 	:BaseComponent(object),
 	m_StartingHealth(startinghealth),
 	m_Health(startinghealth),
+	m_Score(startingScore),
 	m_XOffset(XOffset)
 {
 	if (HealthSpritefilename != "")
@@ -22,10 +23,11 @@ void UIComponent::Update(float)
 {
 	const GameObject* owner = BaseComponent::GetOwner();
 
-	std::stringstream ss;
-	ss <<  " Score: " << m_Score;
+	m_UIss.str(std::string());
+	m_UIss <<  " Score: " << m_Score;
 
-	owner->GetComponent<TextComponent>()->SetText(ss.str());
+	owner->GetComponent<TextComponent>(1)->SetText(m_UIss.str());
+
 }
 void UIComponent::Render() const 
 {
@@ -42,7 +44,20 @@ void UIComponent::UpdateHealth(int healthchange)
 {
 	m_Health += healthchange;
 }
+
 void UIComponent::UpdateScore(int ScoreChange)
 {
 	m_Score += ScoreChange;
 }
+
+void UIComponent::GameEnd() 
+{
+	m_GameOverSS << "GAME OVER: SCORE: " << m_Score;
+	GetOwner()->GetComponent<TextComponent>(2)->SetText(m_GameOverSS.str());
+	m_RestartSS << "Press START to return";
+	GetOwner()->GetComponent<TextComponent>(3)->SetText(m_RestartSS.str());
+	//bad code but it works. if i have time it will be fixed
+	GetOwner()->GetComponent<TextComponent>(2)->Update(0.f);
+	GetOwner()->GetComponent<TextComponent>(3)->Update(0.f);
+}
+

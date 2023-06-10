@@ -32,6 +32,8 @@ namespace dae
 			auto& sceneManager = SceneManager::GetInstance();
 			auto& loadedScene = sceneManager.LoadScene(toLoadScene);
 
+			loadedScene.PauseUpdate( false);
+
 			auto& levelSelector = LevelSelecter::GetInstance();
 
 			switch (toLoadScene)
@@ -103,10 +105,11 @@ namespace dae
 	class Move : public Command
 	{
 	public:
-		Move(GameObject* gameObject, MoveDirection moveDirection, float moveSpeed)
+		Move(GameObject* gameObject, MoveDirection moveDirection, float moveSpeed, int movePixel)
 			: pGameObject(gameObject),
 			moveDirection(moveDirection),
-			moveSpeed(moveSpeed)
+			moveSpeed(moveSpeed),
+			movePixels(movePixel)
 		{};
 		void Execute(float deltaTime) override
 		{
@@ -118,62 +121,113 @@ namespace dae
 
 			auto spriteComponent = pGameObject->GetComponent<SpriteComponent>();
 			auto shootComponent = pGameObject->GetComponent<ShootComponent>();
+
+			//grid movememnt idea 
+			//instead of moving the player at a certain speed he moves a certain amount of pixels (4 maybe)
+			//get the position of the player and then add the speed with delta time to it 
+			//if the new location is move then 4 pixels from the currentl location move to the new location 
+			//if not store the new location and add to it the next cycle
+			//if the players possition is not divisible by 16 the player cant move in the other direction
+
+
 			switch (moveDirection)
 			{
 			case MoveUp:
-				pGameObject->SetLocalPos(glm::vec3{ pos.x, pos.y - moveSpeed * deltaTime, pos.z });
-				if (spriteComponent != nullptr)
+
+				movementY -= moveSpeed * deltaTime;
+				
+				if (movementY <= -movePixels)
 				{
-					spriteComponent->SetCurrentAnimation(Animation::moveUp);
-					
-				}
-				if (shootComponent != nullptr)
-				{
-					shootComponent->SetDirection(up);
+					pGameObject->SetLocalPos(glm::vec3{ pos.x, pos.y - movePixels, pos.z });
+					movementX = 0.f;
+					movementY = 0.f;
+
+
+					if (spriteComponent != nullptr)
+					{
+						spriteComponent->SetCurrentAnimation(Animation::moveUp);
+
+					}
+					if (shootComponent != nullptr)
+					{
+						shootComponent->SetDirection(up);
+					}
 				}
 				break;
 			case MoveDown:
-				pGameObject->SetLocalPos(glm::vec3{ pos.x, pos.y + moveSpeed * deltaTime, pos.z });
-				if (spriteComponent != nullptr)
+				movementY += moveSpeed * deltaTime;
+				if (movementY >= movePixels)
 				{
-					spriteComponent->SetCurrentAnimation(Animation::moveDown);
+					pGameObject->SetLocalPos(glm::vec3{ pos.x, pos.y + movePixels, pos.z });
+					movementX = 0.f;
+					movementY = 0.f;
+
+
+					if (spriteComponent != nullptr)
+					{
+						spriteComponent->SetCurrentAnimation(Animation::moveDown);
+					}
+					if (shootComponent != nullptr)
+					{
+						shootComponent->SetDirection(down);
+					}
 				}
-				if (shootComponent != nullptr)
-				{
-					shootComponent->SetDirection(down);
-				}
+				
 				break;
 			case MoveLeft:
-				pGameObject->SetLocalPos(glm::vec3{ pos.x - moveSpeed * deltaTime, pos.y, pos.z });
 
-				if (spriteComponent != nullptr)
+				movementX -= moveSpeed * deltaTime;
+				if (movementX <= -movePixels)
 				{
-					spriteComponent->SetCurrentAnimation(Animation::moveLeft);
+					pGameObject->SetLocalPos(glm::vec3{ pos.x - movePixels, pos.y, pos.z });
+					movementX = 0.f;
+					movementY = 0.f;
+
+
+					if (spriteComponent != nullptr)
+					{
+						spriteComponent->SetCurrentAnimation(Animation::moveLeft);
+					}
+					if (shootComponent != nullptr)
+					{
+						shootComponent->SetDirection(left);
+					}
 				}
-				if (shootComponent != nullptr)
-				{
-					shootComponent->SetDirection(left);
-				}
+				
 				break;
 			case MoveRight:
-				pGameObject->SetLocalPos(glm::vec3{ pos.x + moveSpeed * deltaTime, pos.y, pos.z });
-				if (spriteComponent != nullptr)
+				movementX += moveSpeed * deltaTime;
+				if (movementX >= movePixels)
 				{
-					spriteComponent->SetCurrentAnimation(Animation::moveRight);
-				}
-				if (shootComponent != nullptr)
-				{
-					shootComponent->SetDirection(right);
+					pGameObject->SetLocalPos(glm::vec3{ pos.x + movePixels, pos.y, pos.z });
+					movementX = 0.f;
+					movementY = 0.f;
+
+
+					if (spriteComponent != nullptr)
+					{
+						spriteComponent->SetCurrentAnimation(Animation::moveRight);
+					}
+					if (shootComponent != nullptr)
+					{
+						shootComponent->SetDirection(right);
+					}
 				}
 				break;
 			default:
 				break;
 			}
+
 		};
 	private:
 		GameObject* pGameObject;
 		MoveDirection moveDirection;
 		float moveSpeed;
+		int movePixels;
+
+		float movementX{ 0 };
+		float movementY{ 0 };
+
 	};
 
 	class ChangeHUD : public Command
@@ -223,12 +277,12 @@ namespace dae
 					{
 						pGameObject->NotifyObservers(Event::FlygarDied);
 					}
-
 					auto& sceneManager = SceneManager::GetInstance();
 					int SceneID = sceneManager.GetSceneID();
 					auto& loadedScene = sceneManager.LoadScene(SceneID);
 					loadedScene.Remove(shootcomponent->GetHit());
 					shootcomponent->Reset();
+					
 					NrPumps = 0;
 				}
 				else

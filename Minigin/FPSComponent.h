@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
+
 namespace dae
 {
 	class FPSComponent final : public BaseComponent

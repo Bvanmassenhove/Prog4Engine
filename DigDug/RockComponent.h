@@ -22,7 +22,10 @@ namespace dae
 		std::shared_ptr<dae::Texture2D> m_RockTexture = nullptr;
 		bool m_Render = true;
 		CollisionComponent* m_pCollisionComponent;
+		CollisionComponent* m_pCollisionComponentDown;
 		float m_X;
 		float m_Y;
+		bool m_CanFall{ false };
+		float m_FallSpeed{ 60.f };
 	};
 }

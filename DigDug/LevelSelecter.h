@@ -46,6 +46,7 @@ namespace dae
 		void LoadLevel(int LevelID, dae::Scene& scene, int SceneID);
 
 		int m_loadedLevel = 1;
+		int m_LoadedScene = 0;
 	};
 }
 

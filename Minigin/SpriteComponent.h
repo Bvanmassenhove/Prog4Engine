@@ -13,7 +13,7 @@ namespace dae
 		moveDown = 1,
 		moveLeft = 2,
 		moveUp = 3,
-		dying = 4, 
+		dying = 4,
 	};
 
 	struct Sprite

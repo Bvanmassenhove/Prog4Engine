@@ -2,7 +2,13 @@
 #include "GameObject.h"
 #include "CollisionManager.h"
 
-
+enum MoveDir
+{
+	Pookaup,
+	Pookadown,
+	Pookaleft,
+	Pookaright
+};
 namespace dae
 {
 	class  PookaComponent final : public BaseComponent
@@ -22,6 +28,8 @@ namespace dae
 
 	private:
 		CollisionComponent* m_pCollisionComponent;
-
+		std::vector<CollisionComponent*> m_pAICollisions;
+		MoveDir m_MoveDirection{ Pookaleft };
+		int m_MoveSwitch{0};
 	};
 }

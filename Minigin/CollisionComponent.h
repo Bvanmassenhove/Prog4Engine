@@ -20,13 +20,14 @@ namespace dae
 		Rock,
 		Level,
 		Arrow,
-		Flame
+		Flame,
+		AI
 	};
 
 	class CollisionComponent final : public BaseComponent
 	{
 	public:
-		CollisionComponent(GameObject* object, rectf collisionRect , CollisionFlag flag, bool DEBUG);
+		CollisionComponent(GameObject* object, rectf collisionRect , CollisionFlag flag, bool DEBUG, float offsetX = 0.f, float offsetY = 0.f);
 		virtual ~CollisionComponent() = default;
 		CollisionComponent(const CollisionComponent& other) = delete;
 		CollisionComponent(CollisionComponent&& other) = delete;
@@ -49,6 +50,8 @@ namespace dae
 		rectf m_CollisionRect;
 		CollisionFlag m_CollisionFlag = CollisionFlag::Off;
 		bool m_DEBUGON = true;
+		float m_OffsetX{ 0 };
+		float m_OffsetY{ 0 };
 	};
 }
 

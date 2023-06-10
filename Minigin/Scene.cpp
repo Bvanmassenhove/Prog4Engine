@@ -4,6 +4,8 @@
 #include "TextComponent.h"
 #include "FPSComponent.h"
 
+
+
 using namespace dae;
 
 unsigned int Scene::m_idCounter = 0;
@@ -15,6 +17,11 @@ Scene::~Scene() = default;
 void Scene::Add(std::shared_ptr<GameObject> object)
 {
 	m_objects.emplace_back(std::move(object));
+}
+
+void Scene::SetGameMode(std::shared_ptr<GameObject> object)
+{
+	m_GameMode = object;
 }
 
 void Scene::Remove(std::shared_ptr<GameObject> object)
@@ -42,10 +49,20 @@ void Scene::RemoveAll()
 
 void Scene::Update(float deltaTime)
 {
-	//todo mark for delete implement 
-	for(auto& object : m_objects)
+	deltaTime;
+
+	if (m_GameMode!=nullptr)
 	{
-		object->Update(deltaTime);
+		m_GameMode.get()->Update(deltaTime);
+	}
+
+	//todo mark for delete implement 
+	if (!m_PauseUpdate)
+	{
+		for (auto& object : m_objects)
+		{
+			object->Update(deltaTime);
+		}
 	}
 }
 
@@ -54,6 +71,10 @@ void Scene::Render() const
 	for (const auto& object : m_objects)
 	{
 		object->Render();
+	}
+	if (m_GameMode != nullptr)
+	{
+		m_GameMode.get()->Render();
 	}
 }
 

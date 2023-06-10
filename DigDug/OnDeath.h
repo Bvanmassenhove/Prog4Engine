@@ -1,6 +1,7 @@
 #pragma once
 #include "Observer.h"
 #include "UIComponent.h"
+#include "GameModeComponent.h"
 #include "GameEvents.h"
 
 namespace dae
@@ -16,26 +17,36 @@ namespace dae
 
 		void Notify(int event, GameObject* gameObject)
 		{
-			auto HealthComp = gameObject->GetComponent<UIComponent>();
+			auto UIComp = gameObject->GetComponent<UIComponent>();
+			auto& sceneManager = SceneManager::GetInstance();
+			int SceneID = sceneManager.GetSceneID();
+			auto& loadedScene = sceneManager.LoadScene(SceneID);
 			switch (event)
 			{
 			case PlayerDied:
 				
-				HealthComp->UpdateHealth(-1);
-				if (HealthComp->GetHealth() <= 0)
+				UIComp->UpdateHealth(-1);
+				if (UIComp->GetHealth() <= 0)
 				{
-					//trigger game over
+					loadedScene.GetGameMode()->GetComponent<GameModeComponent>()->SaveScoreToFile();
+					UIComp->GameEnd();
+					loadedScene.PauseUpdate(true);
 				}
 				break;
 			case PookaDied:
-				HealthComp->UpdateScore(+200);
+				loadedScene.GetGameMode()->GetComponent<GameModeComponent>()->UpdateScore(+200);
+				UIComp->UpdateScore(+200);
+				loadedScene.RemoveEnemy();
 				break;
 			case FlygarDied:
-				HealthComp->UpdateScore(+400);
+				loadedScene.GetGameMode()->GetComponent<GameModeComponent>()->UpdateScore(+400);
+				UIComp->UpdateScore(+400);
+				loadedScene.RemoveEnemy();
 				break;
 			default:
 				break;
 			}
+			
 		}		
 	};
 }

@@ -164,6 +164,7 @@
     <ClCompile Include="..\Minigin\UIComponent.cpp" />
     <ClCompile Include="..\Minigin\PlayerComponent.cpp" />
     <ClCompile Include="FlygarComponent.cpp" />
+    <ClCompile Include="GameModeComponent.cpp" />
     <ClCompile Include="PookaComponent.cpp" />
     <ClCompile Include="ShootComponent.cpp" />
     <ClCompile Include="DigDug.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="..\Minigin\PlayerComponent.h" />
     <ClInclude Include="Achievement.h" />
     <ClInclude Include="FlygarComponent.h" />
+    <ClInclude Include="GameModeComponent.h" />
     <ClInclude Include="PookaComponent.h" />
     <ClInclude Include="ShootComponent.h" />
     <ClInclude Include="ButtonCommands.h" />

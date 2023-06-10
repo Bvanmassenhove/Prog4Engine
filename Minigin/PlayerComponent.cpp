@@ -33,7 +33,7 @@ void PlayerComponent::Update(float)
 		//	loadedScene.Remove(collisionComponent->GetComponentOwner());
 		//}
 
-		if(collisionComponent->GetCollisionFlag() == Pooka && collisionComponent->IsOverlap(m_pCollisionComponent->GetCollisionRect()))
+		if(collisionComponent->GetCollisionFlag() == Pooka && collisionComponent->IsOverlap(m_pCollisionComponent->GetCollisionRect()) || collisionComponent->GetCollisionFlag() == Flygar && collisionComponent->IsOverlap(m_pCollisionComponent->GetCollisionRect()))
 		{
 			GetOwner()->NotifyObservers(Event::PlayerDied);
 			GetOwner()->SetLocalPos(m_Spawn);

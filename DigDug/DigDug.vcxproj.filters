@@ -48,6 +48,9 @@
     <ClCompile Include="FlygarComponent.cpp">
       <Filter>Source Files\CustomComponents</Filter>
     </ClCompile>
+    <ClCompile Include="GameModeComponent.cpp">
+      <Filter>Source Files\CustomComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Achievement.h">
@@ -87,6 +90,9 @@
       <Filter>Source Files\CustomComponents</Filter>
     </ClInclude>
     <ClInclude Include="FlygarComponent.h">
+      <Filter>Source Files\CustomComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameModeComponent.h">
       <Filter>Source Files\CustomComponents</Filter>
     </ClInclude>
   </ItemGroup>

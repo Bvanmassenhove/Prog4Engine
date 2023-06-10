@@ -33,7 +33,7 @@ namespace dae
 		void Shoot() { m_Shooting = true;}
 		bool GetShooting() { return m_Shooting; }
 		GameObject* GetHit() { return m_Hit; }
-		void Reset() {m_Shooting = false, m_Hit = nullptr, m_Lenght = 0.f,m_pCollisionComponent->SetCollisionRect({ 0.f,0.f,0.f,0.f });}
+		void Reset();
 
 	private:
 		std::vector<std::shared_ptr<dae::Texture2D>> m_Arrows;

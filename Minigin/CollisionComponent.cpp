@@ -4,11 +4,13 @@
 
 using namespace dae;
 
-CollisionComponent::CollisionComponent(GameObject* object,rectf collisionRect , CollisionFlag flag, bool DEBUG)
+CollisionComponent::CollisionComponent(GameObject* object,rectf collisionRect , CollisionFlag flag, bool DEBUG, float offsetX, float offsetY)
 	:BaseComponent(object),
 	m_CollisionRect(collisionRect),
 	m_CollisionFlag(flag),
-	m_DEBUGON(DEBUG)
+	m_DEBUGON(DEBUG),
+	m_OffsetX(offsetX),
+	m_OffsetY(offsetY)
 {
 }
 
@@ -16,8 +18,8 @@ void CollisionComponent::Update(float)
 {
 	if (m_CollisionFlag != CollisionFlag::Off && m_CollisionFlag != CollisionFlag::Level && m_CollisionFlag != CollisionFlag::Arrow)
 	{
-		m_CollisionRect.bottom = GetOwner()->GetWorldPos().y ;
-		m_CollisionRect.left = GetOwner()->GetWorldPos().x + 2;
+		m_CollisionRect.bottom = GetOwner()->GetWorldPos().y + m_OffsetY;
+		m_CollisionRect.left = GetOwner()->GetWorldPos().x + m_OffsetX;
 	}
 }
 

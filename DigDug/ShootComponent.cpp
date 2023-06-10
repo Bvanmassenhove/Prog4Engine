@@ -124,3 +124,13 @@ void ShootComponent::Render() const
 	}
 }
 
+void ShootComponent::Reset()
+{
+	m_Shooting = false; 
+	m_Hit = nullptr;
+	m_Lenght = 0.f;
+	if (m_pCollisionComponent != nullptr)
+	{
+		m_pCollisionComponent->SetCollisionRect({ 0.f,0.f,0.f,0.f });
+	}
+}
