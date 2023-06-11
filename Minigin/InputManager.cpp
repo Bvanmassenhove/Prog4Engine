@@ -11,7 +11,7 @@ dae::InputManager::~InputManager()
 
 void dae::InputManager::SetTotalScenes(int NrScene)
 {
-	for (size_t i = 0; i < NrScene; i++)
+	for (int i = 0; i < NrScene; i++)
 	{
 		m_ControllerCommandButtons.push_back(std::vector<ControllerComands>{});
 		m_KeyBoardCommandButtons.push_back(std::vector<KeyboardComands>{});

@@ -119,7 +119,7 @@ std::shared_ptr<GameObject> LevelSelecter::MakePlayer(int SceneID, int Controlle
 	float size = 28; // 32 - 4 to make the sprite 28/28
 
 	rectf playerRect{ player->GetWorldPos().x,player->GetWorldPos().y , size , size };
-	player->AddComponent(new CollisionComponent{ player.get() ,playerRect , Player, true,2.f,2.f });
+	player->AddComponent(new CollisionComponent{ player.get() ,playerRect , Player, false,2.f,2.f });
 	collisionManager.AddCollisionComponent(player->GetComponent<CollisionComponent>(1), SceneID);
 	player->AddComponent(new PlayerComponent{ player.get(),location });
 
@@ -130,7 +130,7 @@ std::shared_ptr<GameObject> LevelSelecter::MakePlayer(int SceneID, int Controlle
 	std::string shootLeftPath = "Sprites/Player/ShootLeft.png";
 	std::string shootUpPath = "Sprites/Player/ShootUp.png";
 	std::string shootDownPath = "Sprites/Player/ShootDown.png";
-	player->AddComponent(new CollisionComponent{ player.get() ,rectf{0.f,0.f,0.f,0.f} , Arrow, true });
+	player->AddComponent(new CollisionComponent{ player.get() ,rectf{0.f,0.f,0.f,0.f} , Arrow, false });
 	collisionManager.AddCollisionComponent(player->GetComponent<CollisionComponent>(2), SceneID);
 	player->AddComponent(new ShootComponent(player.get(), shootRightPath, shootLeftPath, shootUpPath, shootDownPath, 8.f, 128.f, 300.f,16.f));
 
@@ -205,7 +205,7 @@ std::shared_ptr<GameObject> LevelSelecter::MakeFlygar(int SceneID, int Controlle
 	float size = 28; // 32 - 4 to make the sprite 28/28
 
 	rectf flygarRect{ flygar->GetWorldPos().x + 2,flygar->GetWorldPos().y - 2,size,size };
-	flygar->AddComponent(new CollisionComponent{ flygar.get() ,flygarRect , Flygar, true,2.f,2.f });
+	flygar->AddComponent(new CollisionComponent{ flygar.get() ,flygarRect , Flygar, false,2.f,2.f });
 	collisionManager.AddCollisionComponent(flygar->GetComponent<CollisionComponent>(1), SceneID);
 	flygar->AddComponent(new FlygarComponent{ flygar.get() });
 
@@ -215,7 +215,7 @@ std::shared_ptr<GameObject> LevelSelecter::MakeFlygar(int SceneID, int Controlle
 	std::string shootLeftPath = "Sprites/Flygar/FlameLeft.png";
 	std::string shootUpPath = "Sprites/Flygar/FlameUp.png";
 	std::string shootDownPath = "Sprites/Flygar/FlameDown.png";
-	flygar->AddComponent(new CollisionComponent{ flygar.get() ,rectf{0.f,0.f,0.f,0.f} , Flame, true });
+	flygar->AddComponent(new CollisionComponent{ flygar.get() ,rectf{0.f,0.f,0.f,0.f} , Flame, false });
 	collisionManager.AddCollisionComponent(flygar->GetComponent<CollisionComponent>(2), SceneID);
 	flygar->AddComponent(new ShootComponent(flygar.get(), shootRightPath, shootLeftPath, shootUpPath, shootDownPath, 16.f, 128.f, 300.f,8.f));
 
@@ -284,7 +284,7 @@ std::shared_ptr<GameObject> LevelSelecter::MakePooka(int SceneID, glm::vec3 loca
 	float size = 28; // 32 - 4 to make the sprite 28/28
 
 	rectf pookaRect{ pooka->GetWorldPos().x,pooka->GetWorldPos().y,size,size };
-	pooka->AddComponent(new CollisionComponent{ pooka.get() ,pookaRect , Pooka, true,2.f,2.f });
+	pooka->AddComponent(new CollisionComponent{ pooka.get() ,pookaRect , Pooka, false,2.f,2.f });
 	collisionManager.AddCollisionComponent(pooka->GetComponent<CollisionComponent>(), SceneID);
 
 	////up
@@ -321,10 +321,10 @@ std::shared_ptr<GameObject> LevelSelecter::MakeRock(int SceneID, glm::vec3 locat
 
 	rectf rockRect{ rock->GetWorldPos().x + 2,rock->GetWorldPos().y - 2,size,size };
 	rectf rockRectDown{ rock->GetWorldPos().x ,rock->GetWorldPos().y, size,size + 16 };
-	rock->AddComponent(new CollisionComponent{ rock.get() ,rockRect , Rock, true });
+	rock->AddComponent(new CollisionComponent{ rock.get() ,rockRect , Rock, false });
 	collisionManager.AddCollisionComponent(rock->GetComponent<CollisionComponent>(1), SceneID);
 
-	rock->AddComponent(new CollisionComponent{ rock.get() ,rockRectDown , Rock, true });
+	rock->AddComponent(new CollisionComponent{ rock.get() ,rockRectDown , Rock, false });
 	collisionManager.AddCollisionComponent(rock->GetComponent<CollisionComponent>(2), SceneID);
 
 	rock->AddComponent(new RockComponent(rock.get(), rockFile));
@@ -341,7 +341,7 @@ std::shared_ptr<GameObject> LevelSelecter::MakeTile(int SceneID, glm::vec3 locat
 	float size = 28; // 32 - 4 to make the sprite 28/28
 
 	rectf tileRect{ tile->GetWorldPos().x+2,tile->GetWorldPos().y+2 ,size,size };
-	tile->AddComponent(new CollisionComponent{ tile.get() ,tileRect , Level, true});
+	tile->AddComponent(new CollisionComponent{ tile.get() ,tileRect , Level,false});
 	collisionManager.AddCollisionComponent(tile->GetComponent<CollisionComponent>(), SceneID);
 
 	tile->AddComponent(new TileComponent(tile.get(), tileFile));
@@ -527,10 +527,12 @@ void LevelSelecter::LoadScenes()
 	SceneManager::GetInstance().CreateScene("Game : PvP");
 
 	//load all sounds
-	ServiceLocator::Register_Sound_System(std::make_unique<SoundLogger>());
+	ServiceLocator::Register_Sound_System(std::make_unique<SoundSystem>());
 	auto& soundManager = ServiceLocator::Get_Sound_System();
 	soundManager.AddSound("../Data/Sounds/DigDugShot.wav");
 	soundManager.AddSound("../Data/Sounds/GetHitSound.wav");
+	soundManager.AddSound("../Data/Sounds/Pump.wav");
+	soundManager.AddSound("../Data/Sounds/RockHit.wav");
 
 
 	auto& inputmanager = InputManager::GetInstance();

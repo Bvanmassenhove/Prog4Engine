@@ -4,6 +4,8 @@
 #include "Renderer.h"
 #include "SceneManager.h"
 #include "LevelSelecter.h"
+#include "Sounds.h"
+#include "ServiceLocator.h"
 
 
 using namespace dae;
@@ -46,6 +48,8 @@ void RockComponent::Update(float deltaTime)
 	{
 		if (collisionComponent->GetCollisionFlag() == Pooka && collisionComponent->IsOverlap(m_pCollisionComponent->GetCollisionRect()))
 		{
+			auto& soundManager = ServiceLocator::Get_Sound_System();
+			soundManager.PlaySound(RockHit, 2);
 			auto& sceneManager = SceneManager::GetInstance();
 			int SceneID = sceneManager.GetSceneID();
 			auto& loadedScene = sceneManager.LoadScene(SceneID);

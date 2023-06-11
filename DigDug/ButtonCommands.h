@@ -122,14 +122,6 @@ namespace dae
 			auto spriteComponent = pGameObject->GetComponent<SpriteComponent>();
 			auto shootComponent = pGameObject->GetComponent<ShootComponent>();
 
-			//grid movememnt idea 
-			//instead of moving the player at a certain speed he moves a certain amount of pixels (4 maybe)
-			//get the position of the player and then add the speed with delta time to it 
-			//if the new location is move then 4 pixels from the currentl location move to the new location 
-			//if not store the new location and add to it the next cycle
-			//if the players possition is not divisible by 16 the player cant move in the other direction
-
-
 			switch (moveDirection)
 			{
 			case MoveUp:
@@ -267,6 +259,8 @@ namespace dae
 			auto shootcomponent = pGameObject->GetComponent<ShootComponent>();
 			if (shootcomponent != nullptr && shootcomponent->GetHit() != nullptr)
 			{	
+				auto& soundManager = ServiceLocator::Get_Sound_System();
+				soundManager.PlaySound(Pump, 2);
 				if(NrPumps == 3)
 				{
 					if (shootcomponent->GetHit()->GetComponent<CollisionComponent>(1)->GetCollisionFlag() == Pooka)
